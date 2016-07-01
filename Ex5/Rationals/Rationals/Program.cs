@@ -101,7 +101,7 @@ namespace Rationals
             else return gcd(n, m % n);
         }
 
-        public String toString()
+        public override String ToString()
         {
             if (denominator == 1)
             {
@@ -133,28 +133,28 @@ namespace Rationals
             return r.Add(other);
         }
 
-
+        /* Lab appendix */
         public static Rational operator *(Rational r, Rational other)
         {
             return r.Mul(other);
         }
-
+        /* Lab appendix */
         public static Rational operator -(Rational r, Rational other)
         {
             return r.Sub(other);
         }
-
+        /* Lab appendix */
         public static Rational operator /(Rational r, Rational other)
         {
             return r.Div(other);
         }
-
+        /* Lab appendix */
         public static explicit operator double(Rational r)
         {
             double d = r.numerator / r.denominator;
             return d;
         }
-
+        /* Lab appendix */
         public static explicit operator Rational(int num)
         {
             Rational r = new Rational(num);
@@ -168,22 +168,25 @@ namespace Rationals
         static void Main(string[] args)
         {
 
-            //// Lab 3:
+            //// Lab 3 test:
             Rational number = new Rational(4, 5);
             Rational number2 = new Rational(16, 20);
 
-            Console.WriteLine("numbe1: "+number.toString() +", number2: "+ number2.toString());
+            Console.WriteLine("numbe1: {0}, number2: {1}", number.ToString(), number2.ToString());
             number2.Reduce();
-            Console.WriteLine("reduced number2: "+number2.toString());
+            Console.WriteLine("reduced number2: "+number2.ToString());
             number.Mul(number);
-            Console.WriteLine("number1 * number2: " + number.Mul(number).toString());
+            Console.WriteLine("number1 * number2: " + number.Mul(number).ToString());
             Console.WriteLine("Is equal? " + number.equals(number2));
-            Console.WriteLine("number1 + number2: " + number.Add(number2).toString());
+            Console.WriteLine("number1 + number2: " + number.Add(number2).ToString());
 
 
-            //Lab appendix
-
-
+            //Lab appendix test:
+            Console.WriteLine("operator + : number+number2= " + (number+number2).ToString());
+            Console.WriteLine("operator * : number*number2= " + (number * number2).ToString());
+            Console.WriteLine("operator / : number/number2= " + (number / number2).ToString());
+            Console.WriteLine("operator - : number-number2= " + (number - number2).ToString() );
+            Console.WriteLine("(double) casting : (double)(number-number2)= " + ((double)(number - number2)).ToString());
             Console.Read();
         }
     } //end class

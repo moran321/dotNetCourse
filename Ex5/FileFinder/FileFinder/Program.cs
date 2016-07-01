@@ -15,15 +15,24 @@ namespace FileFinder
         {
             string path = Path.GetFullPath(args[0]); //get directory
             Console.WriteLine(path);
-            string pattern = args[1];
+            string subString = args[1];
             
-            //get all files that match the pattern
-            string[] allFiles =  Directory.GetFiles(path, pattern, SearchOption.AllDirectories);
+            //get all files in path
+            string[] allFiles =  Directory.GetFiles(path, "*", SearchOption.AllDirectories);
 
+            //get files that contains the substring
+            List<string> files = new List<string>();
+            foreach (string str in allFiles)
+            {
+                if (str.Contains(subString))
+                {
+                    files.Add(str);
+                }
+            }
            
 
             //display files and their length
-            foreach (string file in allFiles)
+            foreach (string file in files)
             {
                 FileInfo info = new FileInfo(file);
                 long length = info.Length;   
