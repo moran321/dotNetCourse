@@ -3,9 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace FileFinder
 {
@@ -13,23 +11,15 @@ namespace FileFinder
     {
         static void Main(string[] args)
         {
-            string path = Path.GetFullPath(args[0]); //get directory
-            Console.WriteLine(path);
+            //get input from command line
+            string directoryPath = args[0];
             string subString = args[1];
-            
-            //get all files in path
-            string[] allFiles =  Directory.GetFiles(path, "*", SearchOption.AllDirectories);
 
-            //get files that contains the substring
+            string path = Path.GetFullPath(directoryPath);
+
+
             List<string> files = new List<string>();
-            foreach (string str in allFiles)
-            {
-                if (str.Contains(subString))
-                {
-                    files.Add(str);
-                }
-            }
-           
+            FindFiles(path, subString, files);
 
             //display files and their length
             foreach (string file in files)
@@ -41,7 +31,33 @@ namespace FileFinder
 
             Console.Read();
 
-        } /****end main *****************/
+        }/**************/
 
-    }/****end class *****************/
+
+
+
+        //return file if contains the substring
+        static void FindFiles(string file, string subString, List<string> files)
+        {         
+            FileAttributes attr = File.GetAttributes(file);
+            
+            if (attr.HasFlag(FileAttributes.Directory))  //folder
+            {       
+                string[] allFiles = Directory.GetFiles(file, "*", SearchOption.AllDirectories);
+                foreach (string str in allFiles) 
+                {
+                    FindFiles(str, subString, files); //recursion call
+                }
+            }
+            else  //regular file
+            {
+                if (file.Contains(subString))
+                {
+                    files.Add(file);
+                    return;
+                }     
+            }
+        }/**************/
+
+    }
 }
