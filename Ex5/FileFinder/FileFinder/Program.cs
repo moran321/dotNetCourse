@@ -19,7 +19,8 @@ namespace FileFinder
 
 
             List<string> files = new List<string>();
-            FindFiles(path, subString, files);
+            FileFinderRecursion recursion = new FileFinderRecursion();
+            recursion.FindFiles(path, subString, files);
 
             //display files and their length
             foreach (string file in files)
@@ -36,29 +37,7 @@ namespace FileFinder
 
 
 
-        //return file if contains the substring
-        static void FindFiles(string file, string subString, List<string> files)
-        {         
-            FileAttributes attr = File.GetAttributes(file);
-            
-            if (attr.HasFlag(FileAttributes.Directory))  //folder
-            {
-               
-                string[] allFiles = Directory.GetFiles(file, "*", SearchOption.TopDirectoryOnly);
-                foreach (string str in allFiles) 
-                {
-                    FindFiles(str, subString, files); //recursion call
-                }
-            }
-            else  //regular file
-            {
-                if (file.Contains(subString))
-                {
-                    files.Add(file);
-                    return;
-                }     
-            }
-        }/**************/
+
 
     }
 }
