@@ -42,8 +42,9 @@ namespace FileFinder
             FileAttributes attr = File.GetAttributes(file);
             
             if (attr.HasFlag(FileAttributes.Directory))  //folder
-            {       
-                string[] allFiles = Directory.GetFiles(file, "*", SearchOption.AllDirectories);
+            {
+               
+                string[] allFiles = Directory.GetFiles(file, "*", SearchOption.TopDirectoryOnly);
                 foreach (string str in allFiles) 
                 {
                     FindFiles(str, subString, files); //recursion call

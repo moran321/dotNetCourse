@@ -140,8 +140,8 @@ namespace Rationals
 
         public override int GetHashCode()
         {
-            int result = this.denominator ^ this.numerator;
-            return result;
+            //int result = this.denominator ^ this.numerator;
+            return this.ToString().GetHashCode();
         }
 
 
