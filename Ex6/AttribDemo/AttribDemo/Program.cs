@@ -10,8 +10,9 @@ namespace AttribDemo
     {
         static void Main(string[] args)
         {
-            AssemblyAnalyzer analyzer= new AssemblyAnalyzer();
-            analyzer.AnalayzeAssembly(Assembly.GetEntryAssembly());
+            AssemblyAnalyzer analyzer = new AssemblyAnalyzer();
+            bool IsAllApproved = analyzer.AnalayzeAssembly(Assembly.GetEntryAssembly());
+            Console.WriteLine("Is all approved: " + IsAllApproved);
         }
     }
 }
