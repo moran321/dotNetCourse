@@ -11,7 +11,7 @@ namespace AttribDemo
         static void Main(string[] args)
         {
             AssemblyAnalyzer analyzer = new AssemblyAnalyzer();
-            bool IsAllApproved = analyzer.AnalayzeAssembly(Assembly.GetEntryAssembly());
+            bool IsAllApproved = analyzer.AnalayzeAssembly(Assembly.GetExecutingAssembly());
             Console.WriteLine("Is all approved: " + IsAllApproved);
         }
     }
