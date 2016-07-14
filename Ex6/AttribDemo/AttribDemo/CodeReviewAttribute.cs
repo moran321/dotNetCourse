@@ -7,22 +7,38 @@ using System.Threading.Tasks;
 namespace AttribDemo
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple=true)]    
-    class CodeReviewAttribute : Attribute
+    public class CodeReviewAttribute : Attribute
     {
-        public string Name { get; }
-        public string Date { get; }
-        public bool IsApproved { get; }
+
+        private readonly string _name;
+        private readonly bool _isApproved;
+        private readonly DateTime _date;
+
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        public DateTime Date
+        {
+            get { return _date; }
+        }
+
+        public bool IsApproved
+        {
+            get { return _isApproved; }
+        }
 
         public CodeReviewAttribute(string name, string date, bool isApproved)
         {
-            this.Name = name;
-            this.Date = date;
-            this.IsApproved = isApproved;
+            this._name = name;
+            this._date = DateTime.Parse(date);
+            this._isApproved = isApproved;
         }
 
         public override string ToString()
         {
-            return String.Format("Name: "+Name+"\t Date: "+Date+"\t Is approved: " + IsApproved);
+            return String.Format("Name: "+ _name+"\t Date: "+_date+"\t Is approved: " + _isApproved);
         }
     }
 }

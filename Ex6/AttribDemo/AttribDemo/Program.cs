@@ -1,4 +1,6 @@
-﻿using System;
+﻿/*Moran Ankori*/
+/*Lab1.2*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,8 +13,8 @@ namespace AttribDemo
         static void Main(string[] args)
         {
             AssemblyAnalyzer analyzer = new AssemblyAnalyzer();
-            bool IsAllApproved = analyzer.AnalayzeAssembly(Assembly.GetExecutingAssembly());
-            Console.WriteLine("Is all approved: " + IsAllApproved);
+            Console.WriteLine( "Is all code approved:{0} " , 
+                analyzer.AnalayzeAssembly(Assembly.GetExecutingAssembly()) );
         }
     }
 }

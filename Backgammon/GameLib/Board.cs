@@ -34,6 +34,7 @@ namespace GameLib
 
 
         //Arrange the position of the end of the game for debugging
+        /*
         public void InitializeBoardCustom()
         {
             for (int i = 0; i < 5; i++)
@@ -116,7 +117,8 @@ namespace GameLib
             numOfStonesInLane[20] = 5;
             numOfStonesInLane[24] = 2;
 
-        }/****************************************/
+        }
+        /****************************************/
 
 
         //get the indexes of all the lanes this player has stones on
@@ -131,15 +133,16 @@ namespace GameLib
                 }
             }
             return list;
-        } /****************************************/
-
+        } 
+        /****************************************/
 
 
         public void EatOtherPlayer(Move move)
         {
             RemoveStoneFromLane(move.From);
             EatStone(move.To);
-        } /****************************************/
+        } 
+        /****************************************/
 
         //invoked when a player try to get back on board
         public void GetBackFromEaten(Player player , int to)
@@ -153,7 +156,8 @@ namespace GameLib
                 AddStoneInLane((CellContent)player.PlayerNumber, to);
             }
             EatenStones.Remove( (CellContent)player.PlayerNumber);
-        } /****************************************/
+        }
+        /****************************************/
 
 
         //move stone from one lane to another, without eating
@@ -161,13 +165,15 @@ namespace GameLib
         {
             AddStoneInLane(rowOccupation[move.From - 1], move.To);
             RemoveStoneFromLane(move.From);
-        } /****************************************/
+        }
+        /****************************************/
 
         //invoke when the player has all his stones at home and move them out
         public void MoveStoneOut(int from)
         {
             RemoveStoneFromLane(from);
-        } /****************************************/
+        }
+        /****************************************/
 
      
         private void AddStoneInLane(CellContent cellType,int lane)
@@ -195,7 +201,8 @@ namespace GameLib
             rowOccupation[lane- 1] = cellType;
             numOfStonesInLane[lane]++;
 
-        }/****************************************/
+        }
+        /****************************************/
 
         private void RemoveStoneFromLane(int lane)
         {
@@ -253,5 +260,6 @@ namespace GameLib
             return numOfStonesInLane[lane];
         }/****************************************/
 
+     
     }
 }

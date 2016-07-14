@@ -14,7 +14,7 @@ namespace AttribDemo
         public bool AnalayzeAssembly(Assembly assemblyObject)
         {
             Type[] types = assemblyObject.GetTypes();
-            bool IsAllApproved = true;
+          
             foreach (Type type in types)
             {
                 Attribute attribute = type.GetCustomAttribute(typeof(CodeReviewAttribute));
@@ -25,13 +25,16 @@ namespace AttribDemo
                     if (reviewAttribute!=null)
                     {
                         if (!reviewAttribute.IsApproved)
-                            IsAllApproved = false;
+                        {
+                            return false;
+                        }
+                          
                     }
                 }
 
 
             }
-            return IsAllApproved;
+            return true;
 
         }
     }

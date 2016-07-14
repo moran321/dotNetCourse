@@ -34,7 +34,7 @@ namespace GameLib
         {
             if (From==25 || From == 0)
             {
-                return string.Format("From: Out, To: {1}", To);
+                return string.Format("From: Out, To: {0}", To);
             }
             if (To == 25 || To == 0)
             {

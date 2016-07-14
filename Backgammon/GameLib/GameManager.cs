@@ -12,104 +12,161 @@ namespace GameLib
     {
         public enum GameType { TwoPlayers, OnePlayer, ComputerOnly };
         public enum Victory { Regular, Mars, TurkishMars }
-        public BackgammonGame BackgammonGameInstance { get; private set; }
+        public Game BackgammonGameInstance;
         public Player currentPlayer { get; private set; }
-      
-
+        /****************************************/
 
         //C'tor
-        /****************************************/
-        public GameManager(GameType gametype,string player1name, string player2name )
+        public GameManager(GameType gametype, string player1name, string player2name)
         {
-            if (gametype == GameType.TwoPlayers)
-            {
-                BackgammonGameInstance = new TwoPlayersGame(player1name, player2name);
-            }
-            else if (gametype == GameType.OnePlayer)
-            {
 
-            }
+            BackgammonGameInstance = new Game(player1name, player2name);
+            currentPlayer = BackgammonGameInstance.GetPlayerOne();
 
-            currentPlayer = BackgammonGameInstance.getPlayerOne();
-
-        } /****************************************/
+        }
+        /****************************************/
 
 
         public void ChangeTurn()
         {
-            if (currentPlayer == BackgammonGameInstance.getPlayerOne())
+            if (currentPlayer == BackgammonGameInstance.GetPlayerOne())
             {
-                currentPlayer = BackgammonGameInstance.getPlayerTwo();
+                currentPlayer = BackgammonGameInstance.GetPlayerTwo();
             }
             else
             {
-                currentPlayer = BackgammonGameInstance.getPlayerOne();
+                currentPlayer = BackgammonGameInstance.GetPlayerOne();
             }
+            if (currentPlayer.Name.Equals("Computer"))
+                ComputerPlay();
         }
+        /****************************************/
 
-        public Player getCurrentPlayer()
+        public Player GetCurrentPlayer()
         {
             return currentPlayer;
-        } /****************************************/
+        }
+        /****************************************/
 
 
         public bool IsGameOver()
         {
             return BackgammonGameInstance.IsGameOver();
         }
-
         /****************************************/
+
         public bool Play(int fromLine, int toLine)
         {
             //check input
-            bool isValid = BackgammonGameInstance.CheckValidation(currentPlayer, fromLine, toLine);
+            bool isValid = CheckIfMoveExist(currentPlayer, fromLine, toLine);
             if (!isValid)
             {
                 return false;
             }
             //check if thers is moves
-            if (BackgammonGameInstance.GetPlayerOptions(currentPlayer).Count == 0)
+            if (BackgammonGameInstance.GetPlayerOptions(currentPlayer).Length == 0)
             {
                 ChangeTurn();
                 return true;
             }
+
             //take a move
             BackgammonGameInstance.MakeMove(currentPlayer, fromLine, toLine);
 
             //change turn if player used both dice
-            if (BackgammonGameInstance.GetLengthOfCurrentTurn()==0)
+            if (BackgammonGameInstance.GetLengthOfCurrentTurn() == 0)
+            {
                 ChangeTurn();
+            }
 
             return true;
         } /****************************************/
 
-        private List<int> GetPlayerLanes(Player player)
-        {
-            return BackgammonGameInstance.GetGameBoard().GetPlayerRowOccupation(player);
-        } /****************************************/
 
-        public List<int> GetPlayerLanes(int player)
+        private void ComputerPlay()
+        {
+            RollDice();
+            do
+            {
+                if (!BackgammonGameInstance.ComputerTurn(currentPlayer))
+                {
+                    ChangeTurn();
+                    return;
+                }
+                    
+            }while (BackgammonGameInstance.GetLengthOfCurrentTurn() > 0);
+
+            ChangeTurn();
+        }
+        /****************************************/
+
+        private int[] GetPlayerLanes(Player player)
+        {
+            return BackgammonGameInstance.GetPlayerRowOccupation(player);
+        } 
+        /****************************************/
+
+        public int[] GetPlayerLanes(int player)
         {
             if (player == 1)
             {
-                return GetPlayerLanes(BackgammonGameInstance.getPlayerOne());
+                return GetPlayerLanes(BackgammonGameInstance.GetPlayerOne());
             }
             else
             {
-                return GetPlayerLanes(BackgammonGameInstance.getPlayerTwo());
+                return GetPlayerLanes(BackgammonGameInstance.GetPlayerTwo());
             }
-        } /****************************************/
+        }
+        /****************************************/
 
         public bool CheckInput(int from, int to)
         {
-          return  BackgammonGameInstance.CheckValidation(currentPlayer, from, to);
-        } /****************************************/
+            return CheckIfMoveExist(currentPlayer, from, to);
+        } 
+        /****************************************/
 
 
-        public bool CheckInput(int from)
+
+        private bool CheckIfMoveExist(Player player, int from, int to)
         {
-            return BackgammonGameInstance.CheckValidation(currentPlayer, from, 0);
-        } /****************************************/
+            Move move = BackgammonGameInstance.FindMove(player, from, to);
+            if (move != null)
+            {
+                return true;
+            }
+            return false;
+        }
+        /****************************************/
+
+
+        public int[] RollDice()
+        {
+            return BackgammonGameInstance.RollDice();
+        }
+        /****************************************/
+
+        public Move[] GetPlayerMoves()
+        {
+            return BackgammonGameInstance.GetPlayerOptions(currentPlayer);
+        }
+        /****************************************/
+
+        public CellContent[,] GetBoard()
+        {
+            return BackgammonGameInstance.GetGameBoard();
+        }  
+        /****************************************/
+
+        public CellContent[] GetEatenStones()
+        {
+            return BackgammonGameInstance.GetEatenStones();            
+        }
+        /****************************************/
+
+        public int GetLengthOfCurrentTurn()
+        {
+            return BackgammonGameInstance.GetLengthOfCurrentTurn();
+        }
 
     }
 }

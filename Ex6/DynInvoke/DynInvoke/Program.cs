@@ -17,12 +17,14 @@ namespace DynInvoke
             C c = new C();
             D d = new D();
 
+
+
             string output = "";
             try {
-                output += (string)InvokeHello(a, " A object")+"\n";
-                output += (string)InvokeHello(b, " B object") + "\n";
-                output += (string)InvokeHello(c, " C object") + "\n";
-                output += (string)InvokeHello(d, " D object") + "\n";
+                output += InvokeHello(a, " A object")+"\n";
+                output += InvokeHello(b, " B object") + "\n";
+                output += InvokeHello(c, " C object") + "\n";
+                output += InvokeHello(d, " D object") + "\n";
 
             }
             catch (ArgumentNullException e)
@@ -40,12 +42,11 @@ namespace DynInvoke
         }
 
 
-        public static object InvokeHello(object obj, string str)
+        public static string InvokeHello(object obj, string str)
         {
             Type objType = obj.GetType();
-            object returnedStr = objType.InvokeMember("Hello", System.Reflection.BindingFlags.InvokeMethod , 
-                null, obj, new object[] {str});
-            return returnedStr;
+            return (string)objType.InvokeMember("Hello", System.Reflection.BindingFlags.InvokeMethod,
+                null, obj, new object[] { str });
         }
 
 

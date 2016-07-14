@@ -4,58 +4,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace GameLib
 {
-    public class TwoPlayersGame : BackgammonGame
-    {
-        
-        Player playerOne;
-        Player playerTwo;
+    public class BackgammonLogic {
 
-        private Board gameBoard;
+        public Player PlayerOne { get; }
+        public Player PlayerTwo { get; }
+        public Board gameBoard;
         private DiceRoller roller;
         private bool isGameOver;
         private int lengthOfCurrentTurn;
 
         //C'tor
-        public TwoPlayersGame(string player1Name, string player2name)
+        public BackgammonLogic(string player1Name, string player2name)
         {
             isGameOver = false;
-            playerOne = new Player(player1Name, 1);
-            playerTwo = new Player(player2name, 2);
+            PlayerOne = new Player(player1Name, 1);
+            PlayerTwo = new Player(player2name, 2);
             roller = new DiceRoller();
             gameBoard = new Board();
 
-            gameBoard.InitializeBoardCustom();
-            //gameBoard.InitializeBoard();
-        } 
-        /****************************************/
-
-        //return all the moves of the player
-        public HashSet<Move> GetPlayerOptions(Player currentPlayer)
-        {
-            HashSet<Move> validMoves = GetValidMoves(currentPlayer, new int[] { roller.Dice1, roller.Dice2 });
-            return validMoves;
-
-        } 
-        /****************************************/
-
-
-        public bool MakeMove(Player player, int from, int to)
-        {
-            Move move;
-            if ((move = FindMove(player, from, to)) != null)
-            {
-                MakeMove(player, move);
-                return true;
-            }
-            return false;
+            //gameBoard.InitializeBoardCustom();
+            gameBoard.InitializeBoard();
         }
         /****************************************/
 
-        private void MakeMove(Player player, Move move)
+        //return all the moves of the player
+        public HashSet<Move> GetPlayerOptions(Player player)
         {
+            HashSet<Move> validMoves = GetValidMoves(player, new int[] { roller.Dice1, roller.Dice2 });
+            return validMoves;
 
+        }
+        /****************************************/
+
+
+        public bool MakeMove(Player player, Move move)
+        {
+            if ( (move = FindMove(player, move.From, move.To)) == null)
+            {
+                return false;
+            }
             //eat move
             if (move.Type == Move.MoveType.Eat)
             {
@@ -88,27 +78,27 @@ namespace GameLib
             if (move.Type == Move.MoveType.Out)
             {
                 int diff1 = roller.Dice1 - move.Length;
-                int diff2= roller.Dice2 - move.Length;
-             
+                int diff2 = roller.Dice2 - move.Length;
+
                 if (diff1 == 0)
                 {
-                   
+
                     moveLength = roller.Dice1;
                 }
                 else if (diff2 == 0)
                 {
-                  
+
                     moveLength = roller.Dice2;
                 }
-                else if (diff1<0)
+                else if (diff1 < 0)
                 {
                     //use the dice that is closer to the move length
-                   
+
                     moveLength = roller.Dice2;
                 }
                 else if (diff2 < 0)
                 {
-                 
+
                     moveLength = roller.Dice1;
                 }
                 else
@@ -118,29 +108,19 @@ namespace GameLib
 
             }
             //update the remainder length
-           else // if (lengthOfCurrentTurn - move.Length == roller.Dice1 || lengthOfCurrentTurn - move.Length == roller.Dice2)
-            { 
+            else // if (lengthOfCurrentTurn - move.Length == roller.Dice1 || lengthOfCurrentTurn - move.Length == roller.Dice2)
+            {
             }
 
             lengthOfCurrentTurn -= moveLength;
             roller.DiceUsed(lengthOfCurrentTurn);
 
+            return true;
 
         } /****************************************/
 
 
-        public bool CheckValidation(Player player, int from, int to)
-        {
-            Move move = FindMove(player, from, to);
-            if (move != null)
-            {
-                return true;
-            }
-            return false;
-        }
-        /****************************************/
-
-        private Move FindMove(Player player, int from, int to)
+        public Move FindMove(Player player, int from, int to)
         {
             //get all the movements options of the current player
             //and check if his input was one of the options
@@ -164,18 +144,6 @@ namespace GameLib
             return isGameOver;
         } /****************************************/
 
-        public Player getPlayerOne()
-        {
-            return playerOne;
-        } 
-        /****************************************/
-
-        public Player getPlayerTwo()
-        {
-            return playerTwo;
-        } 
-        /****************************************/
-
 
         private HashSet<Move> GetValidMoves(Player player, int[] lengthes)
         {
@@ -197,9 +165,9 @@ namespace GameLib
 
             HashSet<Move> validMoves = new HashSet<Move>();
             Move move;
-            foreach (int length in lengthes)
+            foreach (var length in lengthes)
             {
-                foreach (int from in fromList)
+                foreach (var from in fromList)
                 {
                     //player 1 going up the board
                     if (player.PlayerNumber == 1)
@@ -219,7 +187,7 @@ namespace GameLib
                             }
 
                         }
-                        else if (from+length>24) //player 1 move out (from upper right board)
+                        else if (from + length > 24) //player 1 move out (from upper right board)
                         {
                             //check if all stones out of the other player teritory
                             if (fromList.Intersect(Enumerable.Range(1, 18)).Count() == 0)
@@ -261,11 +229,11 @@ namespace GameLib
                 }
             }
             return validMoves;
-        } 
+        }
         /****************************************/
 
 
-        public int[] rollDice()
+        public int[] RollDice()
         {
             int[] rolled = roller.Roll();
             lengthOfCurrentTurn = rolled[0] + rolled[1];
@@ -274,19 +242,20 @@ namespace GameLib
                 lengthOfCurrentTurn *= 2;
             }
             return rolled;
-        } 
+        }
         /****************************************/
 
-        public void EndGame()
-        {
 
+        public CellContent[,] GetGameBoard()
+        {
+            return gameBoard.BoardMatrix;
         } /****************************************/
 
-
-        public Board GetGameBoard()
+        public CellContent[] GetEatenStones()
         {
-            return gameBoard;
+            return gameBoard.EatenStones.ToArray();
         } /****************************************/
+
 
         public bool IsDouble()
         {
@@ -297,7 +266,14 @@ namespace GameLib
         public int GetLengthOfCurrentTurn()
         {
             return lengthOfCurrentTurn;
-        } /****************************************/
+        }
+        /****************************************/
+
+        public int[] GetPlayerRowOccupation(Player player)
+        {
+            return gameBoard.GetPlayerRowOccupation(player).ToArray();
+        }
+        /****************************************/
 
     }
 }

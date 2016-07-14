@@ -40,15 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BackgammonGame.cs" />
+    <Compile Include="BackgammonLogic.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="DiceRoller.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Move.cs" />
-    <Compile Include="OnePlayerGame.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TwoPlayersGame.cs" />
+    <Compile Include="Game.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

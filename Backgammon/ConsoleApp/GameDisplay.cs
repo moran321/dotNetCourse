@@ -2,12 +2,6 @@
 using GameLib;
 using System.Collections.Generic;
 
-/*
-todo:
-*remove eaten when comeback
-*gameover
-*out
-*/
 
 namespace ConsoleUI
 {
@@ -17,10 +11,10 @@ namespace ConsoleUI
     {
 
         private string playerOneSign = "O", playerTwoSign = "@", none = " ";
-        private string playerOneName = "Moran", playerTwoName = "Raz";
+        private string playerOneName, playerTwoName ;
         private ConsoleColor playerOneColor = ConsoleColor.Red, playerTwoColor = ConsoleColor.Cyan;
 
-        BackgammonGame game;
+      //  Game game;
         CellContent[,] board;
         GameManager manager;
         /****************************************/
@@ -28,8 +22,8 @@ namespace ConsoleUI
         //C'tor
         public GameDisplay()
         {
-            manager = new GameManager(GameManager.GameType.TwoPlayers, playerOneName, playerTwoName);
-            game = manager.BackgammonGameInstance;
+           
+            //game = manager.BackgammonGameInstance;
         }  /****************************************/
 
 
@@ -38,25 +32,30 @@ namespace ConsoleUI
         {
             WelcomeDisplay();
 
-            // while (GameIsNotOver)
+            Player player=manager.GetCurrentPlayer(); ;
+            DisplayBoard();
             while (!manager.IsGameOver())
             {
                 InstructionsDisplay();
                 Roll(); //roll dice
-                Player player = manager.getCurrentPlayer();
-                while (player.Equals(manager.getCurrentPlayer())) //the same turn
+                player = manager.GetCurrentPlayer();
+               
+                while (manager.GetLengthOfCurrentTurn()>0) //the same turn
                 {
-                    DisplayBoard();
+                  
                     if (DisplayMovesOptions()) //if there is options to move
                         GetInputAndMove();  //get 2 numbers
                     else
                     {
                         manager.ChangeTurn(); //skip turn if there is no moves
+                        break;
                     }
                 }
+                Console.WriteLine("\n====================== Change Turn ================================\n");
+                DisplayBoard();
             }
             Console.WriteLine("---- GAME OVER ----");
-            Console.WriteLine("Congratulaions! {0} you won!",manager.currentPlayer.Name);
+            Console.WriteLine("Congratulaions! {0} you won!", player.Name);
 
         }  /****************************************/
 
@@ -84,6 +83,7 @@ namespace ConsoleUI
             System.Console.WriteLine("\t\tWelcome To Backgammon Game!");
             Console.WriteLine("======================================================\n");
 
+            GetGameType();
 
             Console.Write("Player 1 you start from  1 and your stone are: ");
             Console.ForegroundColor = playerOneColor;
@@ -94,17 +94,55 @@ namespace ConsoleUI
             Console.WriteLine(playerTwoSign);
             Console.ResetColor();
 
-            /*
-            Console.Write("Player 1 enter your name: ");
-            string name = Console.ReadLine();
-            playerOneName = name;
-            Console.Write("Player 2 enter your name: ");
-            name = Console.ReadLine();
-            playerTwoName = name;
-            */
-
         }  /****************************************/
 
+
+        private void GetGameType()
+        {
+            Console.WriteLine("Choose a Game: ");
+            Console.WriteLine("1) 1 player.");
+            Console.WriteLine("2) 2 players.");
+            string type;
+            int itype=0;
+            bool isValid = false;
+            while (!isValid)
+            {
+                isValid = true;
+                Console.Write("Enter a Number of game:");
+                type = Console.ReadLine();
+
+               if ( !int.TryParse(type, out itype))
+                {
+                    Console.WriteLine("Input Invalid!");
+                    isValid = false;
+                }else if( itype!=2 && itype != 1)
+                {
+                    Console.WriteLine("Invalid Option!");
+                    isValid = false;
+                }
+            }
+
+            if (itype==2 )
+            {
+                Console.Write("Player 1 enter your name: ");
+                string name = Console.ReadLine();
+                playerOneName = name;
+                Console.Write("Player 2 enter your name: ");
+                name = Console.ReadLine();
+                playerTwoName = name;
+
+                manager = new GameManager(GameManager.GameType.TwoPlayers, playerOneName, playerTwoName);
+                return;
+            }else  if (itype == 1)
+            {
+                Console.Write("Player 1 enter your name: ");
+                string name = Console.ReadLine();
+                playerOneName = name;
+                manager = new GameManager(GameManager.GameType.TwoPlayers, playerOneName, "Computer");
+                return;
+            }
+        }
+        /****************************************/
 
         private void GetInputAndMove()
         {
@@ -120,7 +158,8 @@ namespace ConsoleUI
                 }
             }
 
-        }  /****************************************/
+        }  
+        /****************************************/
 
 
         private int[] Get2Inputs()
@@ -135,15 +174,25 @@ namespace ConsoleUI
                 from = Console.ReadLine();
                 System.Console.Write("Enter a lane to pute stone on:");
                 to = Console.ReadLine();
-                if ( !int.TryParse(from, out ifrom) || !int.TryParse(to, out ito))
+                if ( !int.TryParse(from, out ifrom))
                 {
-                    if ( string.Equals(from, "out", StringComparison.OrdinalIgnoreCase) ) { 
+                    if (string.Equals(from, "out", StringComparison.OrdinalIgnoreCase))
+                    {
                         if (manager.currentPlayer.PlayerNumber == 1)
                             ifrom = 0;
                         else
                             ifrom = 25;
                     }
-                    else if (string.Equals(to, "out", StringComparison.OrdinalIgnoreCase))
+                    else
+                    {
+                        Console.WriteLine("Input Error!");
+                        isValid = false;
+                    }
+
+                }
+                if ( !int.TryParse(to, out ito))
+                { 
+                     if (string.Equals(to, "out", StringComparison.OrdinalIgnoreCase))
                     {
                         if (manager.currentPlayer.PlayerNumber == 1)
                             ito = 25;
@@ -155,6 +204,7 @@ namespace ConsoleUI
                         Console.WriteLine("Input Error!");
                         isValid = false;
                     }
+
                 }
                 if (!manager.CheckInput(ifrom, ito))
                 {
@@ -166,80 +216,33 @@ namespace ConsoleUI
         }
         /****************************************/
 
-        /*
-        private int GetInputToOut()
-        {
-            string from;
-            int ifrom = 0;
-            bool isValid = true;
-            while (isValid)
-            {
-                System.Console.Write("Enter a lane to take stone from:");
-                from = Console.ReadLine();
-
-                if (int.TryParse(from, out ifrom))
-                {
-                    Console.WriteLine("Input Error!");
-                    isValid = false;
-                }
-                else if (!manager.CheckInput(ifrom))
-                {
-                    Console.WriteLine("Invalid move! pick from the list above.");
-                    isValid = false;
-                }
-
-            } 
-
-            return ifrom;
-        } 
-        /****************************************/
-
-        /*
-        private int GetInputFromEaten()
-        {
-            string to;
-            int ito = 0;
-            bool isValid = true;
-            while (isValid)
-            {
-                System.Console.Write("Enter a lane to put stone on:");
-                to = Console.ReadLine();
-
-                if (int.TryParse(to, out ito))
-                {
-                    Console.WriteLine("Input Error!");
-                    isValid = false;
-                }
-                else if (!manager.CheckInput(ito))
-                {
-                    Console.WriteLine("Invalid move! pick from the list above.");
-                    isValid = false;
-                }
-            }
-
-            return ito;
-        } 
-        /****************************************/
-
-
 
         private void Roll()
         {
-            int[] dice = game.rollDice(); //roll dice
-            System.Console.WriteLine("your roll result: {0}, {1}", dice[0], dice[1]); //show results
+            int[] dice = manager.RollDice(); //roll dice
+            System.Console.Write("your roll result:");
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write(" {0} ",dice[0]);
+            Console.ResetColor();
+            Console.Write(", ");
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Write(" {0} ", dice[1]);
+            Console.ResetColor();
             if (dice[0] == dice[1])
             {
-                Console.WriteLine("Congratulations! You got double, play twice!");
+                Console.WriteLine("\nCongratulations! You got double, play twice!");
             }
         } 
         /****************************************/
 
         private bool DisplayMovesOptions()
         {
-            HashSet<Move> moves = game.GetPlayerOptions(manager.currentPlayer); //get valid moves
-            if (moves == null || moves.Count == 0)
+            Move[] moves = manager.GetPlayerMoves(); //get valid moves
+            if (moves == null || moves.Length == 0)
             {
-                System.Console.WriteLine("Sorry! Your don't have any moves");
+                System.Console.WriteLine("You don't have any moves!");
                 return false;
             }
             System.Console.WriteLine("your options:");
@@ -253,28 +256,31 @@ namespace ConsoleUI
 
         private void DisplayBoard()
         {
-            board = game.GetGameBoard().BoardMatrix;
+            board = manager.GetBoard();
 
             Console.WriteLine("\n--13--14--15--16--17--18---Bl--19--20--21--22--23--24--");
 
             //upper side
             for (int i = 0; i < 6; i++)
             {
+               
                 Console.Write("|");
                 for (int j = 0; j < 6; j++)
                 {
                     if (board[i, j] == CellContent.PlayerTwo)
                     {
+                      
                         Console.ForegroundColor = playerTwoColor;
                         Console.Write(" {0} ", playerTwoSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("|", playerTwoSign);
                     }
                     else if (board[i, j] == CellContent.PlayerOne)
                     {
+                  
                         Console.ForegroundColor = playerOneColor;
                         Console.Write(" {0} ", playerOneSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("|", playerOneSign);
 
                     }
@@ -283,16 +289,17 @@ namespace ConsoleUI
                         Console.Write(" {0} |", none);
                     }
                 }
-
+                Console.ResetColor();
                 //eaten stones zone
-                if (game.GetGameBoard().EatenStones?.Count > 0 && game.GetGameBoard().EatenStones?.Count > i)
+                
+                if (manager.GetEatenStones()?.Length > 0 && manager.GetEatenStones()?.Length > i)
                 {
-                    if ((int)game.GetGameBoard().EatenStones[i] == 1)
+                    if ((int)manager.GetEatenStones()[i] == 1)
                     {
                         Console.Write("|/");
                         Console.ForegroundColor = playerOneColor;
                         Console.Write("{0}", playerOneSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White; ;
                         Console.Write("/||");
                     }
                     else
@@ -300,7 +307,7 @@ namespace ConsoleUI
                         Console.Write("|/");
                         Console.ForegroundColor = playerTwoColor;
                         Console.Write("{0}", playerTwoSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("/||");
                     }
                 }
@@ -311,34 +318,40 @@ namespace ConsoleUI
 
                 for (int j = 6; j < 12; j++)
                 {
+                  
                     if (board[i, j] == CellContent.PlayerTwo)
                     {
                         Console.ForegroundColor = playerTwoColor;
                         Console.Write(" {0} ", playerTwoSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("|", playerTwoSign);
                     }
                     else if (board[i, j] == CellContent.PlayerOne)
                     {
                         Console.ForegroundColor = playerOneColor;
                         Console.Write(" {0} ", playerOneSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("|", playerOneSign);
 
                     }
                     else
                     {
+
                         Console.Write(" {0} |", none);
                     }
                 }
+                Console.ResetColor();
                 Console.WriteLine();
+
             }
-
+        
             Console.WriteLine("=======================================================");
-
+          
             //down side
             for (int i = 6; i < 12; i++)
             {
+                Console.ForegroundColor = ConsoleColor.White;
+           
                 Console.Write("|");
                 for (int j = 0; j < 6; j++)
                 {
@@ -346,14 +359,14 @@ namespace ConsoleUI
                     {
                         Console.ForegroundColor = playerTwoColor;
                         Console.Write(" {0} ", playerTwoSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("|", playerTwoSign);
                     }
                     else if (board[i, j] == CellContent.PlayerOne)
                     {
                         Console.ForegroundColor = playerOneColor;
                         Console.Write(" {0} ", playerOneSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("|", playerOneSign);
 
                     }
@@ -362,16 +375,16 @@ namespace ConsoleUI
                         Console.Write(" {0} |", none);
                     }
                 }
-
+             
                 //eaten stones zone
-                if (game.GetGameBoard().EatenStones?.Count > 0 && game.GetGameBoard().EatenStones?.Count > i)
+                if (manager.GetEatenStones()?.Length > 0 && manager.GetEatenStones()?.Length > i)
                 {
-                    if ((int)game.GetGameBoard().EatenStones[i] == 1)
+                    if ((int)manager.GetEatenStones()[i] == 1)
                     {
                         Console.Write("|/");
                         Console.ForegroundColor = playerOneColor;
                         Console.Write("{0}", playerOneSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("/||");
                     }
                     else
@@ -379,7 +392,7 @@ namespace ConsoleUI
                         Console.Write("|/");
                         Console.ForegroundColor = playerTwoColor;
                         Console.Write("{0}", playerTwoSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("/||");
                     }
                 }
@@ -394,14 +407,14 @@ namespace ConsoleUI
                     {
                         Console.ForegroundColor = playerTwoColor;
                         Console.Write(" {0} ", playerTwoSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("|", playerTwoSign);
                     }
                     else if (board[i, j] == CellContent.PlayerOne)
                     {
                         Console.ForegroundColor = playerOneColor;
                         Console.Write(" {0} ", playerOneSign);
-                        Console.ResetColor();
+                        Console.ForegroundColor = ConsoleColor.White;
                         Console.Write("|", playerOneSign);
 
                     }
@@ -410,16 +423,16 @@ namespace ConsoleUI
                         Console.Write(" {0} |", none);
                     }
                 }
+                Console.ResetColor();
                 Console.WriteLine();
 
             }
-
+         
             Console.WriteLine("--12--11--10--9---8---7----Wi---6---5---4---3---2---1--\n");
 
-
+            Console.ResetColor();
         }  
         /****************************************/
-
 
 
 

@@ -11,6 +11,7 @@ namespace GameLib
         public string Name { get; }
         public int PlayerNumber { get; }
         public int NumberOfStonesOut{ get; private set;}
+        /****************************************/
 
         public Player(string playerName, int playerNumber)
         {
@@ -18,18 +19,18 @@ namespace GameLib
             PlayerNumber = playerNumber;
             NumberOfStonesOut = 0;
         }
-
+        /****************************************/
 
         public override string ToString()
         {
             return Name;
         }
-
+        /****************************************/
         public void AddStoneOut()
         {
             if (NumberOfStonesOut<15)
                 NumberOfStonesOut++;
         }
-
+        /****************************************/
     }
 }
