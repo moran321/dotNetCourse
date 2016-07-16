@@ -7,30 +7,37 @@ using System.Threading.Tasks;
 
 namespace GameLib
 {
-    public class BackgammonLogic {
+    public class BackgammonLogic
+    {
 
         public Player PlayerOne { get; }
         public Player PlayerTwo { get; }
         public Board gameBoard;
         private DiceRoller roller;
-        private bool isGameOver;
+        public bool IsGameOver { get; private set; }
         private int lengthOfCurrentTurn;
 
         //C'tor
-        public BackgammonLogic(string player1Name, string player2name)
+        public BackgammonLogic(string player1name, string player2name)
         {
-            isGameOver = false;
-            PlayerOne = new Player(player1Name, 1);
+            IsGameOver = false;
+            PlayerOne = new Player(player1name, 1);
             PlayerTwo = new Player(player2name, 2);
             roller = new DiceRoller();
             gameBoard = new Board();
 
-            //gameBoard.InitializeBoardCustom();
-            gameBoard.InitializeBoard();
+           // gameBoard.InitializeBoardCustom();
+             gameBoard.InitializeBoard();
         }
         /****************************************/
 
-        //return all the moves of the player
+        public int GetLane(int lane)
+        {
+            return gameBoard.GetNumOfCheckersInLane(lane);
+
+        }
+
+        //return all the valid moves of the player
         public HashSet<Move> GetPlayerOptions(Player player)
         {
             HashSet<Move> validMoves = GetValidMoves(player, new int[] { roller.Dice1, roller.Dice2 });
@@ -39,10 +46,9 @@ namespace GameLib
         }
         /****************************************/
 
-
         public bool MakeMove(Player player, Move move)
         {
-            if ( (move = FindMove(player, move.From, move.To)) == null)
+            if ((move = FindMove(player, move.From, move.To)) == null)
             {
                 return false;
             }
@@ -62,9 +68,9 @@ namespace GameLib
                 gameBoard.MoveStoneOut(move.From);
                 player.AddStoneOut();
                 //if the player finished to take out all his stones
-                if (player.NumberOfStonesOut == 15)
+                if (player.NumberOfCheckersOut == 15)
                 {
-                    isGameOver = true;
+                    IsGameOver = true;
                 }
             }
             //regulaer move
@@ -74,7 +80,8 @@ namespace GameLib
             }
 
             int moveLength = move.Length;
-            //the player can move less than the dice number
+
+            //when moving out the player can move less than the dice number
             if (move.Type == Move.MoveType.Out)
             {
                 int diff1 = roller.Dice1 - move.Length;
@@ -107,19 +114,16 @@ namespace GameLib
                 }
 
             }
-            //update the remainder length
-            else // if (lengthOfCurrentTurn - move.Length == roller.Dice1 || lengthOfCurrentTurn - move.Length == roller.Dice2)
-            {
-            }
 
             lengthOfCurrentTurn -= moveLength;
             roller.DiceUsed(lengthOfCurrentTurn);
 
             return true;
 
-        } /****************************************/
+        }
+        /****************************************/
 
-
+        //check if move is valid
         public Move FindMove(Player player, int from, int to)
         {
             //get all the movements options of the current player
@@ -139,18 +143,13 @@ namespace GameLib
         }
         /****************************************/
 
-        public bool IsGameOver()
-        {
-            return isGameOver;
-        } /****************************************/
-
 
         private HashSet<Move> GetValidMoves(Player player, int[] lengthes)
         {
             List<int> fromList;
 
             //the player can't play until he gets out of eaten zone
-            if (gameBoard.EatenStones.Contains((CellContent)player.PlayerNumber))
+            if (gameBoard.EatenCheckers.Contains((CellContent)player.PlayerNumber))
             {
                 if (player.PlayerNumber == 1)
                     fromList = new List<int> { 0 }; //start point of player 1
@@ -175,12 +174,12 @@ namespace GameLib
                         if ((from + length) <= 24 && length > 0) //check if out of bounds
                         {
                             //check if destination is valid
-                            if (fromList.Contains(from + length) || gameBoard.GetNumOfStonesInLane(from + length) == 0)
+                            if (fromList.Contains(from + length) || gameBoard.GetNumOfCheckersInLane(from + length) == 0)
                             {  //occupy by this player or none
                                 move = new Move(from, from + length, Move.MoveType.Regular);
                                 validMoves.Add(move);
                             }
-                            else if (gameBoard.GetNumOfStonesInLane(from + length) == 1)
+                            else if (gameBoard.GetNumOfCheckersInLane(from + length) == 1)
                             {//other player has 1 stone to eat
                                 move = new Move(from, from + length, Move.MoveType.Eat);
                                 validMoves.Add(move);
@@ -189,11 +188,27 @@ namespace GameLib
                         }
                         else if (from + length > 24) //player 1 move out (from upper right board)
                         {
-                            //check if all stones out of the other player teritory
+                            //check if all stones are at player's home (lanes 19-24)
                             if (fromList.Intersect(Enumerable.Range(1, 18)).Count() == 0)
                             {
-                                move = new Move(from, 25, Move.MoveType.Out);
-                                validMoves.Add(move);
+                                bool isValid = true;
+                                foreach (var validmove in validMoves)
+                                {
+                                    //check if there is a longer move
+                                    //if exit, there is no move valid moves
+                                    if (validmove.From < from && validmove.Type == Move.MoveType.Out)
+                                    {
+                                        isValid = false;
+                                        break;
+                                    }
+                                }
+
+                                if (isValid)
+                                {
+                                    move = new Move(from, 25, Move.MoveType.Out);
+                                    validMoves.Add(move);
+                                }
+
                             }
                         }
                     }
@@ -204,12 +219,12 @@ namespace GameLib
                         if ((from - length) > 0 && length > 0) //check if out of bounds
                         {
                             if (fromList.Contains(from - length) || //occupy by this player 
-                                gameBoard.GetNumOfStonesInLane(from - length) == 0) //none
+                                gameBoard.GetNumOfCheckersInLane(from - length) == 0) //none
                             {
                                 move = new Move(from, from - length, Move.MoveType.Regular);
                                 validMoves.Add(move);
                             }
-                            else if (gameBoard.GetNumOfStonesInLane(from - length) == 1)
+                            else if (gameBoard.GetNumOfCheckersInLane(from - length) == 1)
                             {//other player has 1 stone to eat
                                 move = new Move(from, from - length, Move.MoveType.Eat);
                                 validMoves.Add(move);
@@ -218,11 +233,26 @@ namespace GameLib
                         }
                         else if (from - length < 1) //move out (from lower right board)
                         {
-                            //check if all stones out of the other player teritory
+                            //check if all stones are at player's home (lanes 0-6)
                             if (fromList.Intersect(Enumerable.Range(7, 24)).Count() == 0)
                             {
-                                move = new Move(from, 0, Move.MoveType.Out);
-                                validMoves.Add(move);
+                                bool isValid = true;
+                                foreach (var validmove in validMoves)
+                                {
+                                    //check if there is a longer move
+                                    //if exit, there is no move valid moves
+                                    if (validmove.From > from && validmove.Type == Move.MoveType.Out)
+                                    {
+                                        isValid = false;
+                                        break;
+                                    }
+                                }
+                                if (isValid)
+                                {
+                                    move = new Move(from, 0, Move.MoveType.Out);
+                                    validMoves.Add(move);
+                                }
+
                             }
                         }
                     }
@@ -231,7 +261,6 @@ namespace GameLib
             return validMoves;
         }
         /****************************************/
-
 
         public int[] RollDice()
         {
@@ -245,23 +274,23 @@ namespace GameLib
         }
         /****************************************/
 
-
         public CellContent[,] GetGameBoard()
         {
             return gameBoard.BoardMatrix;
-        } /****************************************/
+        }
+        /****************************************/
 
         public CellContent[] GetEatenStones()
         {
-            return gameBoard.EatenStones.ToArray();
-        } /****************************************/
-
+            return gameBoard.EatenCheckers.ToArray();
+        }
+        /****************************************/
 
         public bool IsDouble()
         {
             return (roller.Dice1 == roller.Dice2);
-        } /****************************************/
-
+        }
+        /****************************************/
 
         public int GetLengthOfCurrentTurn()
         {
@@ -275,5 +304,10 @@ namespace GameLib
         }
         /****************************************/
 
+        public int[] GetDiceResults()
+        {
+            return (new int[] { roller.Dice1, roller.Dice2 });
+        }
+        /****************************************/
     }
 }

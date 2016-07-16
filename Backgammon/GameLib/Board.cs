@@ -13,28 +13,27 @@ namespace GameLib
         private int numOfRows = 12;
         private int oneSideSize = 6;
 
-        private Dictionary<int, int> numOfStonesInLane; //key= lane number, value= number of stones
+        private Dictionary<int, int> numOfCheckersInLane; //key= lane number, value= number of stones
+        private CellContent[] RowOccupation { get; }
         public CellContent[,] BoardMatrix { get; }
-        private CellContent[] rowOccupation;
-        public List<CellContent> EatenStones{ get; private set;}
+        public List<CellContent> EatenCheckers{ get; private set;}
 
         //C'tor
         public Board()
         {
             BoardMatrix = new CellContent[numOfRows, rowSize];
-            rowOccupation = new CellContent[numOfRows * 2];
-            EatenStones = new List<CellContent>();
-            numOfStonesInLane = new Dictionary<int, int>();
+            RowOccupation = new CellContent[numOfRows * 2];
+            EatenCheckers = new List<CellContent>();
+            numOfCheckersInLane = new Dictionary<int, int>();
             
             for (int i = 1; i < 25; i++)
             {
-                numOfStonesInLane[i] = 0;
+                numOfCheckersInLane[i] = 0;
             }
-        } /****************************************/
+        }
+        /****************************************/
 
-
-        //Arrange the position of the end of the game for debugging
-        /*
+        //Arrange the position of the end of the game for debugging        
         public void InitializeBoardCustom()
         {
             for (int i = 0; i < 5; i++)
@@ -52,23 +51,24 @@ namespace GameLib
             }
 
 
-            rowOccupation[0] = CellContent.PlayerTwo;
-            rowOccupation[1] = CellContent.PlayerTwo;
-            rowOccupation[2] = CellContent.PlayerTwo;
+            RowOccupation[0] = CellContent.PlayerTwo;
+            RowOccupation[1] = CellContent.PlayerTwo;
+            RowOccupation[2] = CellContent.PlayerTwo;
 
-            rowOccupation[21] = CellContent.PlayerOne;
-            rowOccupation[22] = CellContent.PlayerOne;
-            rowOccupation[23] = CellContent.PlayerOne;
+            RowOccupation[21] = CellContent.PlayerOne;
+            RowOccupation[22] = CellContent.PlayerOne;
+            RowOccupation[23] = CellContent.PlayerOne;
 
 
-            numOfStonesInLane[1] = 5;
-            numOfStonesInLane[2] = 5;
-            numOfStonesInLane[3] = 5;
-            numOfStonesInLane[22] = 5;
-            numOfStonesInLane[23] = 5;
-            numOfStonesInLane[24] = 5;
+            numOfCheckersInLane[1] = 5;
+            numOfCheckersInLane[2] = 5;
+            numOfCheckersInLane[3] = 5;
+            numOfCheckersInLane[22] = 5;
+            numOfCheckersInLane[23] = 5;
+            numOfCheckersInLane[24] = 5;
 
-        } /****************************************/
+        } 
+        /****************************************/
 
         //Arrange the start position
         public void InitializeBoard()
@@ -99,35 +99,34 @@ namespace GameLib
             }
 
 
-            rowOccupation[0] = CellContent.PlayerOne;
-            rowOccupation[4] = CellContent.PlayerTwo;
-            rowOccupation[7] = CellContent.PlayerTwo;
-            rowOccupation[11] = CellContent.PlayerOne;
-            rowOccupation[12] = CellContent.PlayerTwo;
-            rowOccupation[16] = CellContent.PlayerOne;
-            rowOccupation[19] = CellContent.PlayerOne;
-            rowOccupation[23] = CellContent.PlayerTwo;
+            RowOccupation[0] = CellContent.PlayerOne;
+            RowOccupation[4] = CellContent.PlayerTwo;
+            RowOccupation[7] = CellContent.PlayerTwo;
+            RowOccupation[11] = CellContent.PlayerOne;
+            RowOccupation[12] = CellContent.PlayerTwo;
+            RowOccupation[16] = CellContent.PlayerOne;
+            RowOccupation[19] = CellContent.PlayerOne;
+            RowOccupation[23] = CellContent.PlayerTwo;
           
-            numOfStonesInLane[1] = 2;
-            numOfStonesInLane[5] = 5;
-            numOfStonesInLane[8] = 3;
-            numOfStonesInLane[12] = 5;
-            numOfStonesInLane[13] = 5;
-            numOfStonesInLane[17] = 3;
-            numOfStonesInLane[20] = 5;
-            numOfStonesInLane[24] = 2;
+            numOfCheckersInLane[1] = 2;
+            numOfCheckersInLane[5] = 5;
+            numOfCheckersInLane[8] = 3;
+            numOfCheckersInLane[12] = 5;
+            numOfCheckersInLane[13] = 5;
+            numOfCheckersInLane[17] = 3;
+            numOfCheckersInLane[20] = 5;
+            numOfCheckersInLane[24] = 2;
 
         }
         /****************************************/
-
 
         //get the indexes of all the lanes this player has stones on
         internal List<int> GetPlayerRowOccupation(Player player)
         {
             List<int> list = new List<int>();
-            for (int i = 0; i < rowOccupation.Length; i++)
+            for (int i = 0; i < RowOccupation.Length; i++)
             {
-                if ((int)rowOccupation[i] == player.PlayerNumber)
+                if ((int)RowOccupation[i] == player.PlayerNumber)
                 {
                     list.Add(i + 1);
                 }
@@ -136,47 +135,46 @@ namespace GameLib
         } 
         /****************************************/
 
-
         public void EatOtherPlayer(Move move)
         {
-            RemoveStoneFromLane(move.From);
-            EatStone(move.To);
+            RemoveCheckerFromLane(move.From);
+            EatChecker(move.To);
         } 
         /****************************************/
 
         //invoked when a player try to get back on board
         public void GetBackFromEaten(Player player , int to)
         {
-            if ((int)rowOccupation[to] != player.PlayerNumber && rowOccupation[to] != CellContent.None)
+            //eat other player
+            if ((int)RowOccupation[to-1] != player.PlayerNumber && RowOccupation[to-1] != CellContent.None)
             {
-                EatStone(to);
+                EatChecker(to);
             }
-            else
+            else 
             {
-                AddStoneInLane((CellContent)player.PlayerNumber, to);
+                AddCheckerInLane((CellContent)player.PlayerNumber, to);
             }
-            EatenStones.Remove( (CellContent)player.PlayerNumber);
+            //remove the current stone from the eaten list
+            EatenCheckers.Remove( (CellContent)player.PlayerNumber);
         }
         /****************************************/
-
 
         //move stone from one lane to another, without eating
         public void MakeRegularMove(Move move)
         {
-            AddStoneInLane(rowOccupation[move.From - 1], move.To);
-            RemoveStoneFromLane(move.From);
+            AddCheckerInLane(RowOccupation[move.From - 1], move.To);
+            RemoveCheckerFromLane(move.From);
         }
         /****************************************/
 
-        //invoke when the player has all his stones at home and move them out
+        //invoked when the player has all his stones at home and move them out
         public void MoveStoneOut(int from)
         {
-            RemoveStoneFromLane(from);
+            RemoveCheckerFromLane(from);
         }
         /****************************************/
-
-     
-        private void AddStoneInLane(CellContent cellType,int lane)
+   
+        private void AddCheckerInLane(CellContent cellType,int lane)
         {
 
             int i, j;
@@ -184,82 +182,88 @@ namespace GameLib
             // add stone to the new lane
             if (lane <= numOfRows) //lower board
             {
-                i = numOfRows - numOfStonesInLane[lane] - 1;  //skip the occupied cells
+                i = numOfRows - numOfCheckersInLane[lane] - 1;  //skip the occupied cells
                 j = rowSize - lane; //lane index
                 if (i >= oneSideSize) //board is full (don't show the new stone)
                     BoardMatrix[i, j] = cellType;
             }
             else //upper board
             {
-                i = numOfStonesInLane[lane]; //skip the occupied cells
+                i = numOfCheckersInLane[lane]; //skip the occupied cells
                 j = lane - rowSize - 1; //lane index
                 if (i < oneSideSize) //board is full (don't show the new stone)
                     BoardMatrix[i, j] = cellType;
             }
 
             //update the occupation of the new lane to the current player
-            rowOccupation[lane- 1] = cellType;
-            numOfStonesInLane[lane]++;
+            RowOccupation[lane- 1] = cellType;
+            numOfCheckersInLane[lane]++;
 
         }
         /****************************************/
 
-        private void RemoveStoneFromLane(int lane)
+        private void RemoveCheckerFromLane(int lane)
         {
             int i, j;
             //remove stone from the old lane
             if (lane <= numOfRows) //lower board
             {
-                i = numOfRows - numOfStonesInLane[lane]; //find the last occupied cell
+                i = numOfRows - numOfCheckersInLane[lane]; //find the last occupied cell
+                if (i > 11) i = 11;
                 j = rowSize - lane; //lane index
                 if (i >= 6) //board is not full
                     BoardMatrix[i, j] = CellContent.None; //remove stone
             }
             else //upper board
             {
-                i = numOfStonesInLane[lane] - 1; //find the last occupied cell
+                i = numOfCheckersInLane[lane] - 1; //find the last occupied cell
+                if (i < 0) i = 0;
                 j = lane - rowSize - 1; //lane index
                 if (i < 6) //board is not full
                     BoardMatrix[i, j] = CellContent.None;
             }
 
-            --numOfStonesInLane[lane];
+            --numOfCheckersInLane[lane];
             //remove occupation of current player if there is no stones on the old lane
-            if (numOfStonesInLane[lane] == 0)
-                rowOccupation[lane - 1] = CellContent.None;
-        }/****************************************/
+            if (numOfCheckersInLane[lane] == 0)
+                RowOccupation[lane - 1] = CellContent.None;
+        }
+        /****************************************/
 
         //invoked when a player step on other player lane with 1 stone
-        private void EatStone(int lane)
+        private void EatChecker(int lane)
         {
             int index = lane - 1;
             //add the player stone to eaten zone
-            EatenStones.Add(rowOccupation[index]);
+            EatenCheckers.Add(RowOccupation[index]);
 
             //save the old occupation for the exchange
-            CellContent occupation = rowOccupation[index];
+            CellContent occupation = RowOccupation[index];
 
             //remove stone and reset occupation
-            RemoveStoneFromLane(lane);
+            RemoveCheckerFromLane(lane);
             
             //change occupation of destination to the eating player
             if (occupation == CellContent.PlayerOne)
             {
-                AddStoneInLane(CellContent.PlayerTwo , lane);
+                AddCheckerInLane(CellContent.PlayerTwo , lane);
             }
             else
             {
-                AddStoneInLane(CellContent.PlayerOne, lane);
+                AddCheckerInLane(CellContent.PlayerOne, lane);
             }
            
-        }/****************************************/
+        }
+        /****************************************/
 
-
-        public int GetNumOfStonesInLane(int lane)
+        public int GetNumOfCheckersInLane(int lane)
         {
-            return numOfStonesInLane[lane];
-        }/****************************************/
+            return numOfCheckersInLane[lane];
+        }
+        /****************************************/
 
-     
+
+
+
     }
 }
