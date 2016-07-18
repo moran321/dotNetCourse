@@ -34,7 +34,6 @@ namespace WinFormsApp
             //start game 
             Start();
 
-
         }
         /****************************************/
 
@@ -42,7 +41,6 @@ namespace WinFormsApp
         {
         }
         /****************************************/
-
 
         public void Start()
         {
@@ -80,7 +78,7 @@ namespace WinFormsApp
                 pictureBox.AllowDrop = true;
             }
         }
-
+        /****************************************/
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -92,7 +90,6 @@ namespace WinFormsApp
             }
         }
         /****************************************/
-
 
         private void GameOverHandler(Object sender, GameOverEventArgs e)
         {
@@ -110,10 +107,6 @@ namespace WinFormsApp
             }
         }
         /****************************************/
-
-
-
-
 
         private void InstructionsDisplayHandler(Object sender, DisplayInstuctionsEventArgs e)
         {
@@ -135,6 +128,7 @@ namespace WinFormsApp
             });
         }
         /****************************************/
+
         private void DisplayMovesOptionsHandler(Object sender, TurnEventArgs e)
         {
             this.Invoke((MethodInvoker)delegate
@@ -207,7 +201,6 @@ namespace WinFormsApp
         }
         /****************************************/
 
-
         private void roll_Click(object sender, EventArgs e)
         {
             int[] dice = _manager.RollDice();
@@ -225,14 +218,69 @@ namespace WinFormsApp
         /****************************************/
 
 
-        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
+        private void DisplayMovesOptions(int from)
         {
 
+            //mark the valid moves
+            foreach (Panel panel in mainpanel.Controls.OfType<Panel>())
+            {
+                foreach (PictureBox pictureBox in panel.Controls.OfType<PictureBox>())
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        pictureBox.AllowDrop = false;
+                        pictureBox.BackColor = Color.Transparent;
+                    });
+
+                    foreach (Move move in _manager.GetPlayerMoves())
+                    {
+                        //mark the valid checkers
+                        if (from == move.From)
+                        {
+                            //mark the target
+                            if (Convert.ToInt32(panel.Tag) == move.To)
+                            {
+                                int tag = _manager._game.GetCheckersInLane(move.To);
+
+                                if (Convert.ToInt32(pictureBox.Tag) == tag)
+                                {
+                                    this.Invoke((MethodInvoker)delegate
+                                    {
+                                        pictureBox.AllowDrop = true;
+                                        pictureBox.DragEnter += new DragEventHandler(pictureBox_DragEnter);
+                                        pictureBox.DragDrop += new DragEventHandler(pictureBox_DragDrop);
+                                    });
+
+                                }
+                                else if (tag == 0 && Convert.ToInt32(pictureBox.Tag) == 1)
+                                {
+                                    this.Invoke((MethodInvoker)delegate
+                                    {
+                                        pictureBox.Image = _validMoveimage;
+                                        pictureBox.AllowDrop = true;
+                                        pictureBox.DragEnter += new DragEventHandler(pictureBox_DragEnter);
+                                        pictureBox.DragDrop += new DragEventHandler(pictureBox_DragDrop);
+                                    });
+                                }
+
+
+                            }
+
+                        }
+                    }
+
+                }
+            }
+        }
+        /****************************************/
+
+        private void pictureBox_MouseDown(object sender, MouseEventArgs e)
+        {       
             var parent = ((Panel)((PictureBox)sender).Parent);
 
             ((PictureBox)sender)?.DoDragDrop(((PictureBox)sender)?.Image, DragDropEffects.Move);
             _from = (string)parent.Tag;
-
+           // DisplayMovesOptions(int.Parse(_from));
         }
         /****************************************/
 
@@ -248,6 +296,7 @@ namespace WinFormsApp
             }
         }
         /****************************************/
+
         private void pictureBox_DragLeave(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.Bitmap))
@@ -261,6 +310,7 @@ namespace WinFormsApp
             }
         }
         /****************************************/
+
         private void pictureBox_DragDrop(object sender, DragEventArgs e)
         {
             var sender_panel = sender as Panel;
@@ -285,7 +335,6 @@ namespace WinFormsApp
         {
 
         }
-
         /****************************************/
 
         private void DisplayBoardHandler(Object sender, DisplayInstuctionsEventArgs e)
@@ -361,7 +410,6 @@ namespace WinFormsApp
             }
         }
         /****************************************/
-
 
         private void RollDiceHandler(Object sender, RollDiceEventArgs e)
         {

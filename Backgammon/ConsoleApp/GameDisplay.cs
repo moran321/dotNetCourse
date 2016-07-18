@@ -40,7 +40,7 @@ namespace ConsoleUI
             Console.WriteLine("########## GAME OVER ##########");
             if (e.VictoryType == GameManager.Victory.Regular)
             {
-                Console.WriteLine("{0} is the winner!",  e.Winner.Name);
+                Console.WriteLine($"{e.Winner.Name} is the winner!");
             }
             else if (e.VictoryType== GameManager.Victory.Mars)
             {
@@ -176,7 +176,7 @@ namespace ConsoleUI
 
         private void RollResults(int[] dice)
         {
-            System.Console.Write("\n{0}, your dice are:\n", _manager.GetCurrentPlayer().Name);
+            System.Console.Write($"\n{ _manager.GetCurrentPlayer().Name}, your dice are:\n");
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Black;
             Console.Write(" {0} ", dice[0]);

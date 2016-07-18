@@ -114,7 +114,7 @@ namespace GameLib
         }
         /****************************************/
 
-        private Move[] GetPlayerMoves()
+        public Move[] GetPlayerMoves()
         {
             return _game.GetPlayerOptions(_currentPlayer);
         }
@@ -138,6 +138,8 @@ namespace GameLib
         }
         /****************************************/
 
+            
+
         public void StartPlaying(Func<string[]> get2Inputs)
         {
             Player prevPlayer = null;
@@ -159,7 +161,7 @@ namespace GameLib
                     dice = RollDice();
                 }
 
-
+               
                 //save the player before changing to know who played last
                 prevPlayer = _currentPlayer;
 
