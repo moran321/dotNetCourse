@@ -208,7 +208,7 @@ namespace Rationals
             Console.WriteLine("operator * : number*number2= " + (number * number2).ToString());
             Console.WriteLine("operator / : number/number2= " + (number / number2).ToString());
             Console.WriteLine("operator - : number-number2= " + (number - number2).ToString());
-            Console.WriteLine("(double) casting : (double)(number-number2)= " + ((double)(number - number2)).ToString());
+            Console.WriteLine("(double) casting : (double)(number2)= " + ((double)(number2)).ToString());
             Console.WriteLine("casting : (Rational)number3= " + ((Rational)(number3)).ToString());
 
             Console.Read();

@@ -28,7 +28,7 @@ namespace Personnel
         public static List<string> ReadData()
         {
             List<string> myList = new List<string>();
-            string fileName = "data.txt";
+            string fileName = "data2.txt";
             try
             {
                 using (StreamReader sr = new StreamReader(fileName))
