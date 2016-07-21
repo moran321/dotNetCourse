@@ -45,6 +45,7 @@
     <Compile Include="DiceRoller.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="EventArgs.cs" />
+    <Compile Include="TryMove.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

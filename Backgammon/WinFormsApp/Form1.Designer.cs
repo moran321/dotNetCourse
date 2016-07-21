@@ -2478,7 +2478,7 @@
             this.outZone.BackColor = System.Drawing.Color.SaddleBrown;
             this.outZone.Controls.Add(this.pictureBox122);
             this.outZone.Controls.Add(this.pictureBox121);
-            this.outZone.Location = new System.Drawing.Point(605, 101);
+            this.outZone.Location = new System.Drawing.Point(647, 95);
             this.outZone.Name = "outZone";
             this.outZone.Size = new System.Drawing.Size(40, 300);
             this.outZone.TabIndex = 4;

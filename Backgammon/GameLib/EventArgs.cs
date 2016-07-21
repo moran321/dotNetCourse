@@ -9,20 +9,21 @@ using System.Threading.Tasks;
 namespace GameLib
 {
     /****************************************/
-    public class DisplayInstuctionsEventArgs : EventArgs
+    public class TurnChangedEventArgs : EventArgs
     {
        
     }
     /****************************************/
     
     /****************************************/
-    public class DisplayMessageEventArgs : EventArgs
+    public class PlayerMovedEventArgs : EventArgs
     {
-        public string Message { get; }
-
-        public DisplayMessageEventArgs(string message)
+        public Move Moved { get; }
+        public Player CurrentPlayer { get; }
+        public PlayerMovedEventArgs(Player currentPlayer, Move move)
         {
-            Message = message;
+            CurrentPlayer = currentPlayer;
+            Moved = move;
         }
     }
     /****************************************/

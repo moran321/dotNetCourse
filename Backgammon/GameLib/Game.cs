@@ -57,10 +57,11 @@ namespace GameLib
         }
         /****************************************/
 
-        public bool MakeMove(Player player, int from, int to)
+        public Move MakeMove(Player player, int from, int to)
         {
             Move move = FindMove(player,from, to);
-            return _backgammonLogic.MakeMove(player, move);
+            _backgammonLogic.MakeMove(player, move);
+            return move;
         }
         /****************************************/
 

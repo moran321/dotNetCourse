@@ -16,9 +16,9 @@ namespace GameLib
         public Game _game;
         public bool isRolled;
         public Player _currentPlayer { get; private set; }
-        public event EventHandler<DisplayInstuctionsEventArgs> DisplayEvent;
+        public event EventHandler<TurnChangedEventArgs> StartTurnEvent;
         public event EventHandler<TurnEventArgs> ChangedMovesEvent;
-        public event EventHandler<DisplayMessageEventArgs> MessageEvent;
+        public event EventHandler<PlayerMovedEventArgs> PlayerMovedEvent;
         public event EventHandler<RollDiceEventArgs> RollDiceEvent;
         public event EventHandler<GameOverEventArgs> GameOverEvent;
 
@@ -58,17 +58,10 @@ namespace GameLib
         }
         /****************************************/
 
-        public bool Play(int fromLine, int toLine)
+        public Move Play(int fromLine, int toLine)
         {
-            //check input
-            bool isValid = CheckIfMoveExist(_currentPlayer, fromLine, toLine);
-            if (!isValid)
-            {
-                return false;
-            }
             //take a move
-            _game.MakeMove(_currentPlayer, fromLine, toLine);
-            return true;
+            return _game.MakeMove(_currentPlayer, fromLine, toLine);
         }
         /****************************************/
 
@@ -140,76 +133,81 @@ namespace GameLib
 
             
 
-        public void StartPlaying(Func<string[]> get2Inputs)
+        public void StartPlaying(Func<TryMove> getMoveInput)
         {
             Player prevPlayer = null;
             int[] dice;
+
             while (!IsGameOver())
             {
-                DisplayEvent(this, new DisplayInstuctionsEventArgs());
-                isRolled = false;
+                //notify that the turn started (to show the user the instructions)
+                StartTurnEvent(this, new TurnChangedEventArgs());
+               
                 if (GetCurrentPlayer().Playertype == Player.PlayerType.Human)
                 {
-                    while (isRolled == false)
+                    //wait for the user to roll
+                    RollDiceEvent(this, new RollDiceEventArgs());
+                    //get the roll results
+                    dice = _game.GetDiceResults();
+                    //do not proceed until the user roll
+                    while (dice[0]==0 || dice[1] == 0)
                     {
                         RollDiceEvent(this, new RollDiceEventArgs());
                     }
-                    dice = _game.GetDiceResults();  //##
+
                 }
-                else
+                else //computer
                 {
                     dice = RollDice();
                 }
 
                
-                //save the player before changing to know who played last
+                //save the player before changing, to remember who played last
                 prevPlayer = _currentPlayer;
 
-                while (GetLengthOfCurrentTurn() > 0) //the same turn
+                //while the user didn't axploit all his turn moves
+                while (GetLengthOfCurrentTurn() > 0) 
                 {
+                    //get valid moves
+                    Move[] moves = GetPlayerMoves();
 
-                    Move[] moves = GetPlayerMoves(); //get valid moves
-
-                    //  Display Moves Options
+                    // call the UI when a player took a move and his valid moves changed
                     ChangedMovesEvent(this, new TurnEventArgs(moves, dice));
+                    //it there is no moves, turn is over.
                     if (moves == null || moves.Length == 0)
                     {
                         break;
                     }
-                    //if human playing get input from UI
+                    //if human is playing, get input from UI
                     if (GetCurrentPlayer().Playertype == Player.PlayerType.Human)
                     {
-                        int[] input = ManageInput(get2Inputs);
-                        if (PlayTurn(input[0], input[1]))
-                        {
-                            MessageEvent(this, new DisplayMessageEventArgs(
-                                string.Format("{0} moved from {1} to {2}", _currentPlayer.Name, input[0], input[1])));
-                        }
+                       int[] input = ManageInput(getMoveInput);
+                       Move moved = Play(input[0], input[1]);
+                       PlayerMovedEvent(this, new PlayerMovedEventArgs(_currentPlayer, (new Move(input[0], input[1],Move.MoveType.Regular))));
+                       
                     }
 
-                    else //generate random move
+                    //if computer- generate random move
+                    else
                     {
                         Random rnd = new Random();
                         int r = rnd.Next(moves.Length);
                         if (moves[r] != null)
                         {
-                            if (PlayTurn(moves[r].From, moves[r].To))
-                            {
-                                MessageEvent(this, new DisplayMessageEventArgs(
-                                    string.Format("{0} moved from {1} to {2}", _currentPlayer.Name, moves[r].From, moves[r].To)));
-                            }
+                            Move moved = Play(moves[r].From, moves[r].To);
+                            PlayerMovedEvent(this, new PlayerMovedEventArgs(_currentPlayer, (new Move(moves[r].From, moves[r].To, Move.MoveType.Regular))));
                         }
-
                     }
-
                 }
+
                 ChangeTurn();
             }
+            //----game over----
+
             //winnner
-
-
             if (_currentPlayer.NumberOfCheckersOut == 0)
             {
+                //if the other player didn't move out nothing yet -> mars.
                 GameOverEvent(this, new GameOverEventArgs(Victory.Mars, prevPlayer));
             }
             else
@@ -217,12 +215,12 @@ namespace GameLib
                 GameOverEvent(this, new GameOverEventArgs(Victory.Regular, prevPlayer));
             }
 
-
         }
         /****************************************/
 
 
-        public int[] ManageInput(Func<string[]> get2Inputs)
+        //check validation
+        private int[] ManageInput(Func<TryMove> getMoveInput)
         {
             int ifrom = 0, ito = 0;
             bool isValid = false;
@@ -231,13 +229,13 @@ namespace GameLib
             {
                 isValid = true;
 
-                string[] input = get2Inputs(); //call the UI method
-
+                //get the current move from user (from UI\GUI...)
+                TryMove input = getMoveInput(); 
 
                 //check if player try to get back from eaten
-                if (!int.TryParse(input[0], out ifrom))
+                if (!int.TryParse(input.From, out ifrom))
                 {
-                    if (string.Equals(input[0], "out", StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(input.From, "out", StringComparison.OrdinalIgnoreCase))
                     {
                         if (_currentPlayer.PlayerNumber == 1)
                             ifrom = 0;
@@ -252,9 +250,9 @@ namespace GameLib
 
                 }
                 //check if player try move stone out 
-                if (!int.TryParse(input[1], out ito))
+                if (!int.TryParse(input.To, out ito))
                 {
-                    if (string.Equals(input[1], "out", StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(input.To, "out", StringComparison.OrdinalIgnoreCase))
                     {
                         if (_currentPlayer.PlayerNumber == 1)
                             ito = 25;
@@ -276,18 +274,6 @@ namespace GameLib
             }
 
             return (new int[] { ifrom, ito });
-        }
-        /****************************************/
-
-        private bool PlayTurn(int from, int to)
-        {
-            Move[] moves = GetPlayerMoves();
-            if (moves != null)
-            {
-                Play(from, to);
-                return true;
-            }
-            return false;
         }
         /****************************************/
 

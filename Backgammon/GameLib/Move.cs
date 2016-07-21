@@ -10,7 +10,7 @@ namespace GameLib
     {
         public int From { get; }
         public int To { get; }
-        public enum MoveType { Regular, Eat, Eaten, Out }
+        public enum MoveType { Regular, Eat, Eaten, Out, TryMove }
         public MoveType Type { get; }
         public int Length
         {

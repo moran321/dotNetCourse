@@ -21,11 +21,11 @@ namespace ConsoleUI
             WelcomeDisplay();
 
             //subscribe to events of the game manager
-            _manager.DisplayEvent += DisplayBoardHandler;
-            _manager.DisplayEvent += InstructionsDisplayHandler;
+            _manager.StartTurnEvent += DisplayBoardHandler;
+            _manager.StartTurnEvent += InstructionsDisplayHandler;
         
             _manager.ChangedMovesEvent += DisplayMovesOptionsHandler;
-            _manager.MessageEvent += PrintMessageHandler;
+            _manager.PlayerMovedEvent += PlayerMovedHandler;
             _manager.RollDiceEvent += RollDiceHandler;
             _manager.GameOverEvent += GameOverHandler;
 
@@ -53,13 +53,13 @@ namespace ConsoleUI
         }
         /****************************************/
 
-        private void PrintMessageHandler(Object sender, DisplayMessageEventArgs e)
+        private void PlayerMovedHandler(Object sender, PlayerMovedEventArgs e)
         {
-            Console.WriteLine(e.Message);
+            Console.WriteLine( "\n {0} moved from {1} to {2}", e.CurrentPlayer.Name, e.Moved.From, e.Moved.To);
         }
         /****************************************/
 
-        private void InstructionsDisplayHandler(Object sender, DisplayInstuctionsEventArgs e)
+        private void InstructionsDisplayHandler(Object sender, TurnChangedEventArgs e)
         {
 
             Console.WriteLine("\n=================== New turn =======================\n");
@@ -147,8 +147,9 @@ namespace ConsoleUI
         }
         /****************************************/
      
-        public string[] Get2Inputs()
+        public TryMove Get2Inputs()
         {
+           
             Console.WriteLine("Please pick from the list above");
             string[] input = new string[2];
             System.Console.Write("Enter a lane to take stone from:");
@@ -156,7 +157,7 @@ namespace ConsoleUI
             System.Console.Write("Enter a lane to pute stone on:");
             input[1] = Console.ReadLine();
 
-            return input;
+            return (new TryMove(input[0], input[1]));
         }
         /****************************************/
 
@@ -169,7 +170,7 @@ namespace ConsoleUI
             if (_manager._game.IsDouble()) {
                 Console.WriteLine("\nCongratulations! You've got a double, play 4 moves!");
             }
-            _manager.isRolled = true;
+          //  _manager.isRolled = true;
 
         }
         /****************************************/
@@ -256,7 +257,7 @@ namespace ConsoleUI
         }
         /****************************************/
 
-        private void DisplayBoardHandler(Object sender, DisplayInstuctionsEventArgs e)
+        private void DisplayBoardHandler(Object sender, TurnChangedEventArgs e)
         {
            
             CellContent[,] board = _manager.GetBoard();
