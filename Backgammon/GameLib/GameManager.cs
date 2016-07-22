@@ -22,6 +22,7 @@ namespace GameLib
         public event EventHandler<RollDiceEventArgs> RollDiceEvent;
         public event EventHandler<GameOverEventArgs> GameOverEvent;
 
+        int[] dice;
         /****************************************/
 
         //C'tor
@@ -131,93 +132,84 @@ namespace GameLib
         }
         /****************************************/
 
-            
-
         public void StartPlaying(Func<TryMove> getMoveInput)
         {
             Player prevPlayer = null;
-            int[] dice;
-
+            
             while (!IsGameOver())
             {
-                //notify that the turn started (to show the user the instructions)
                 StartTurnEvent(this, new TurnChangedEventArgs());
-               
+
                 if (GetCurrentPlayer().Playertype == Player.PlayerType.Human)
                 {
                     //wait for the user to roll
-                    RollDiceEvent(this, new RollDiceEventArgs());
-                    //get the roll results
+                    // RollDiceEvent(this, new RollDiceEventArgs());
                     dice = _game.GetDiceResults();
-                    //do not proceed until the user roll
-                    while (dice[0]==0 || dice[1] == 0)
+
+                    while (dice[0] == 0 || dice[1] == 0)
                     {
                         RollDiceEvent(this, new RollDiceEventArgs());
+                        dice = _game.GetDiceResults();
                     }
-
                 }
                 else //computer
                 {
                     dice = RollDice();
                 }
 
-               
                 //save the player before changing, to remember who played last
                 prevPlayer = _currentPlayer;
 
-                //while the user didn't axploit all his turn moves
-                while (GetLengthOfCurrentTurn() > 0) 
-                {
-                    //get valid moves
-                    Move[] moves = GetPlayerMoves();
-
-                    // call the UI when a player took a move and his valid moves changed
-                    ChangedMovesEvent(this, new TurnEventArgs(moves, dice));
-                    //it there is no moves, turn is over.
-                    if (moves == null || moves.Length == 0)
-                    {
-                        break;
-                    }
-                    //if human is playing, get input from UI
-                    if (GetCurrentPlayer().Playertype == Player.PlayerType.Human)
-                    {
-                       int[] input = ManageInput(getMoveInput);
-                       Move moved = Play(input[0], input[1]);
-                       PlayerMovedEvent(this, new PlayerMovedEventArgs(_currentPlayer, (new Move(input[0], input[1],Move.MoveType.Regular))));
-                       
-                    }
-
-                    //if computer- generate random move
-                    else
-                    {
-                        Random rnd = new Random();
-                        int r = rnd.Next(moves.Length);
-                        if (moves[r] != null)
-                        {
-                            Move moved = Play(moves[r].From, moves[r].To);
-                            PlayerMovedEvent(this, new PlayerMovedEventArgs(_currentPlayer, (new Move(moves[r].From, moves[r].To, Move.MoveType.Regular))));
-                        }
-                    }
-                }
+                PlayTurn(getMoveInput);
 
                 ChangeTurn();
             }
             //----game over----
 
-            //winnner
-            if (_currentPlayer.NumberOfCheckersOut == 0)
-            {
-                //if the other player didn't move out nothing yet -> mars.
-                GameOverEvent(this, new GameOverEventArgs(Victory.Mars, prevPlayer));
-            }
-            else
-            {
-                GameOverEvent(this, new GameOverEventArgs(Victory.Regular, prevPlayer));
-            }
-
+            GetWinner(prevPlayer);
         }
         /****************************************/
 
+
+        //keep looping while the user didn't axploit all his turn moves
+        private void PlayTurn(Func<TryMove> getMoveInput)
+        {
+
+            
+            while (GetLengthOfCurrentTurn() > 0)
+            {
+                
+                Move[] moves = GetPlayerMoves();
+
+               
+                ChangedMovesEvent(this, new TurnEventArgs(moves, dice));
+                
+             
+                if (moves == null || moves.Length == 0)
+                {
+                    break; 
+                }
+               
+                if (GetCurrentPlayer().Playertype == Player.PlayerType.Human)
+                {
+                    int[] input = ManageInput(getMoveInput);
+                    Move moved = Play(input[0], input[1]);
+                    PlayerMovedEvent(this, new PlayerMovedEventArgs(_currentPlayer, (new Move(input[0], input[1], Move.MoveType.Regular))));
+
+                }
+                else //computer
+                {
+                    Random rnd = new Random();
+                    int r = rnd.Next(moves.Length);
+                    if (moves[r] != null)
+                    {
+                        Move moved = Play(moves[r].From, moves[r].To);
+                        PlayerMovedEvent(this, new PlayerMovedEventArgs(_currentPlayer, (new Move(moves[r].From, moves[r].To, Move.MoveType.Regular))));
+                    }
+                }
+            }
+        }
+        /****************************************/
 
         //check validation
         private int[] ManageInput(Func<TryMove> getMoveInput)
@@ -230,7 +222,7 @@ namespace GameLib
                 isValid = true;
 
                 //get the current move from user (from UI\GUI...)
-                TryMove input = getMoveInput(); 
+                TryMove input = getMoveInput();
 
                 //check if player try to get back from eaten
                 if (!int.TryParse(input.From, out ifrom))
@@ -277,6 +269,20 @@ namespace GameLib
         }
         /****************************************/
 
+        private void GetWinner(Player player)
+        {
 
+            //winnner
+            if (_currentPlayer.NumberOfCheckersOut == 0)
+            {
+
+                GameOverEvent(this, new GameOverEventArgs(Victory.Mars, player));
+            }
+            else
+            {
+                GameOverEvent(this, new GameOverEventArgs(Victory.Regular, player));
+            }
+        }
+        /****************************************/
     }
 }

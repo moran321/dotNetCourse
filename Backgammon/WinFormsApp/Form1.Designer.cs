@@ -180,6 +180,8 @@
             this.pictureBox121 = new System.Windows.Forms.PictureBox();
             this.message = new System.Windows.Forms.Label();
             this.dice_numbers = new System.Windows.Forms.Label();
+            this.eaten2 = new System.Windows.Forms.PictureBox();
+            this.eaten1 = new System.Windows.Forms.PictureBox();
             this.mainpanel.SuspendLayout();
             this.panel18.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox91)).BeginInit();
@@ -328,6 +330,8 @@
             this.outZone.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox122)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox121)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eaten2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eaten1)).BeginInit();
             this.SuspendLayout();
             // 
             // rollButton
@@ -355,6 +359,8 @@
             // 
             this.mainpanel.BackgroundImage = global::WinFormsApp.Properties.Resources.board1;
             this.mainpanel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.mainpanel.Controls.Add(this.eaten1);
+            this.mainpanel.Controls.Add(this.eaten2);
             this.mainpanel.Controls.Add(this.panel18);
             this.mainpanel.Controls.Add(this.panel12);
             this.mainpanel.Controls.Add(this.panel19);
@@ -2531,6 +2537,34 @@
             this.dice_numbers.Size = new System.Drawing.Size(0, 24);
             this.dice_numbers.TabIndex = 6;
             // 
+            // eaten2
+            // 
+            this.eaten2.AccessibleRole = System.Windows.Forms.AccessibleRole.Alert;
+            this.eaten2.BackColor = System.Drawing.Color.Transparent;
+            this.eaten2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.eaten2.ErrorImage = global::WinFormsApp.Properties.Resources.blueChecker;
+            this.eaten2.Location = new System.Drawing.Point(255, 153);
+            this.eaten2.Name = "eaten2";
+            this.eaten2.Size = new System.Drawing.Size(33, 36);
+            this.eaten2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.eaten2.TabIndex = 93;
+            this.eaten2.TabStop = false;
+            this.eaten2.Tag = "1";
+            // 
+            // eaten1
+            // 
+            this.eaten1.AccessibleRole = System.Windows.Forms.AccessibleRole.Alert;
+            this.eaten1.BackColor = System.Drawing.Color.Transparent;
+            this.eaten1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.eaten1.ErrorImage = global::WinFormsApp.Properties.Resources.blueChecker;
+            this.eaten1.Location = new System.Drawing.Point(255, 223);
+            this.eaten1.Name = "eaten1";
+            this.eaten1.Size = new System.Drawing.Size(33, 36);
+            this.eaten1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.eaten1.TabIndex = 116;
+            this.eaten1.TabStop = false;
+            this.eaten1.Tag = "1";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2694,6 +2728,8 @@
             this.outZone.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox122)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox121)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eaten2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.eaten1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2853,6 +2889,8 @@
         private System.Windows.Forms.PictureBox pictureBox121;
         private System.Windows.Forms.Label message;
         private System.Windows.Forms.Label dice_numbers;
+        private System.Windows.Forms.PictureBox eaten1;
+        private System.Windows.Forms.PictureBox eaten2;
     }
 }
 

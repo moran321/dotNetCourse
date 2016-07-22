@@ -22,7 +22,6 @@ namespace GameLib
         {
             if (length < Dice2 + Dice1)
             {
-
                 if (Dice1 == length)
                 {
                     Dice2 = 0;

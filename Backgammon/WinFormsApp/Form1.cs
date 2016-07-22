@@ -19,8 +19,11 @@ namespace WinFormsApp
         Image _validMoveimage = global::WinFormsApp.Properties.Resources.whiteChecker;
 
         private List<PictureBox> checkersPlace;
+        private List<PictureBox> validPlaces;
         private Dictionary<int, Panel> lanes;
         string _from, _to;
+
+        PictureBox _movedChecker, _newChecker;
 
         private readonly ManualResetEvent mre = new ManualResetEvent(false);
 
@@ -38,6 +41,7 @@ namespace WinFormsApp
 
             lanes = new Dictionary<int, Panel>();
             checkersPlace = new List<PictureBox>();
+            validPlaces = new List<PictureBox>();
             foreach (Panel panel in mainpanel.Controls.OfType<Panel>())
             {
                 lanes.Add(Convert.ToInt32(panel.Tag), panel);
@@ -131,9 +135,11 @@ namespace WinFormsApp
             this.Invoke((MethodInvoker)delegate
             {
                 message.Text = string.Format("{0} moved from {1} to {2}", e.CurrentPlayer.Name, e.Moved.From, e.Moved.To);
-                //TODO: remove the old checker #####################################
-                //int tag = _manager._game.GetCheckersInLane(e.Moved.From);
-                //checkers[5 * (e.Moved.From - 1) + tag + 1].Image = _validMoveimage;
+
+                //update the board
+                _movedChecker.Image = null;
+                _movedChecker.AllowDrop = false;
+                _movedChecker.BackColor = Color.Transparent;
 
             });
         }
@@ -164,6 +170,49 @@ namespace WinFormsApp
 
             foreach (Move move in e.Moves)
             {
+                if (_manager.GetEatenCheckers()?.Length > 0)
+                {
+                    foreach (CellContent cell in _manager.GetEatenCheckers())
+                    {
+                        if ((int)cell == 1)
+                        {
+                            eaten1.Image = _player1image;
+                        }
+                        else
+                        {
+                            eaten2.Image = _player2image;
+                        }
+                    }
+                }
+                else
+                {
+                    eaten1.Image = null;
+                    eaten2.Image = null;
+                }
+
+
+                if (move.From == 0)
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        eaten1.BackColor = Color.Beige;
+                        eaten1.DragEnter += new DragEventHandler(pictureBox_DragEnter);
+                        eaten1.MouseDown += new MouseEventHandler(pictureBox_MouseDown);
+
+                    });
+                    return;
+                }
+                else if (move.From == 25)
+                {
+                    this.Invoke((MethodInvoker)delegate
+                    {
+                        eaten2.BackColor = Color.Beige;
+                        eaten2.DragEnter += new DragEventHandler(pictureBox_DragEnter);
+                        eaten2.MouseDown += new MouseEventHandler(pictureBox_MouseDown);
+
+                    });
+                    return;
+                }
                 foreach (PictureBox pictureBox in lanes[move.From].Controls.OfType<PictureBox>())
                 {
                     int tag = _manager._game.GetCheckersInLane(move.From);
@@ -178,21 +227,6 @@ namespace WinFormsApp
                         });
 
                     }
-                }
-                foreach (PictureBox pictureBox in lanes[move.To].Controls.OfType<PictureBox>())
-                {
-                    int tag = _manager._game.GetCheckersInLane(move.To);
-                    if (Convert.ToInt32(pictureBox.Tag) == tag)
-                    {
-                        this.Invoke((MethodInvoker)delegate
-                        {
-                            pictureBox.AllowDrop = true;
-                            pictureBox.DragEnter += new DragEventHandler(pictureBox_DragEnter);
-                            pictureBox.DragDrop += new DragEventHandler(pictureBox_DragDrop);
-                        });
-
-
-                    }
                     else if (tag == 0 && Convert.ToInt32(pictureBox.Tag) == 1)
                     {
                         this.Invoke((MethodInvoker)delegate
@@ -204,85 +238,11 @@ namespace WinFormsApp
                         });
                     }
                 }
-
-
             }
+
+
         }
         /****************************************/
-
-
-
-        /*
-    private void DisplayMovesOptionsHandler(object sender, TurnEventArgs e)
-    {
-        int[] dice = _manager._game.GetDiceResults();
-        this.Invoke((MethodInvoker)delegate
-        {
-            //show the dice result
-            dice_numbers.Text = string.Format(dice[0].ToString() + "," + dice[1].ToString());
-        });
-
-        //mark the valid moves
-        foreach (Panel panel in lanes.Values)
-        {
-            foreach (PictureBox pictureBox in panel.Controls.OfType<PictureBox>())
-            {
-                //reset 
-                this.Invoke((MethodInvoker)delegate
-                {
-                    pictureBox.AllowDrop = false;
-                    pictureBox.BackColor = Color.Transparent;
-                });
-
-                foreach (Move move in e.Moves)
-                {
-                    //mark the valid checkers
-                    if (Convert.ToInt32(panel.Tag) == move.From)
-                    {
-                        int tag = _manager._game.GetCheckersInLane(move.From);
-                        if (Convert.ToInt32(pictureBox.Tag) == tag)
-                        {
-                            this.Invoke((MethodInvoker)delegate
-                            {
-                                pictureBox.BackColor = Color.Beige;
-                                pictureBox.DragEnter += new DragEventHandler(pictureBox_DragEnter);
-                                pictureBox.MouseDown += new MouseEventHandler(pictureBox_MouseDown);
-
-                            });
-                        }
-                    }
-                    //mark the targets
-                    else if (Convert.ToInt32(panel.Tag) == move.To)
-                    {
-                        int tag = _manager._game.GetCheckersInLane(move.To);
-
-                        if (Convert.ToInt32(pictureBox.Tag) == tag)
-                        {
-                            this.Invoke((MethodInvoker)delegate
-                            {
-                                pictureBox.AllowDrop = true;
-                                pictureBox.DragEnter += new DragEventHandler(pictureBox_DragEnter);
-                                pictureBox.DragDrop += new DragEventHandler(pictureBox_DragDrop);
-                            });
-
-                        }
-                        else if (tag == 0 && Convert.ToInt32(pictureBox.Tag) == 1)
-                        {
-                            this.Invoke((MethodInvoker)delegate
-                            {
-                                pictureBox.Image = _validMoveimage;
-                                pictureBox.AllowDrop = true;
-                                pictureBox.DragEnter += new DragEventHandler(pictureBox_DragEnter);
-                                pictureBox.DragDrop += new DragEventHandler(pictureBox_DragDrop);
-                            });
-                        }
-                    }
-                }
-            }
-        }
-    }
-    /****************************************/
-
 
 
         public TryMove GetMove()
@@ -291,58 +251,59 @@ namespace WinFormsApp
         }
         /****************************************/
 
-
-        private void DisplayMovesOptions(int from)
+        private void ResetValidMoves()
         {
 
-            //mark the valid moves
-            foreach (Panel panel in mainpanel.Controls.OfType<Panel>())
+            foreach (PictureBox box in validPlaces)
             {
-                foreach (PictureBox pictureBox in panel.Controls.OfType<PictureBox>())
+                if (box.Image == _validMoveimage)
                 {
-                    this.Invoke((MethodInvoker)delegate
-                    {
-                        pictureBox.AllowDrop = false;
-                        pictureBox.BackColor = Color.Transparent;
-                    });
+                    box.Image = null;
 
-                    foreach (Move move in _manager.GetPlayerMoves())
+                }
+                box.AllowDrop = false;
+                box.BackColor = Color.Transparent;
+                box.DragEnter -= pictureBox_DragEnter;
+                box.DragDrop -= pictureBox_DragDrop;
+                box.MouseDown -= pictureBox_MouseDown;
+            }
+            validPlaces.Clear();
+        }
+        /****************************************/
+
+        private void MarkTargets(Panel from_panel)
+        {
+            ResetValidMoves();
+
+            Move[] moves = _manager.GetPlayerMoves();
+            foreach (Move move in moves)
+            {
+                if (move.From == Convert.ToInt32(from_panel.Tag))
+                {
+                    int tag = _manager._game.GetCheckersInLane(move.To);
+                    foreach (PictureBox pictureBox in lanes[move.To].Controls.OfType<PictureBox>())
                     {
-                        //mark the valid checkers
-                        if (from == move.From)
+                        if (!_manager._game.GetPlayerRowOccupation(_manager._currentPlayer).Contains(move.To))
                         {
-                            //mark the target
-                            if (Convert.ToInt32(panel.Tag) == move.To)
+                            if (Convert.ToInt32(pictureBox.Tag) == 1)
                             {
-                                int tag = _manager._game.GetCheckersInLane(move.To);
-
-                                if (Convert.ToInt32(pictureBox.Tag) == tag)
-                                {
-                                    this.Invoke((MethodInvoker)delegate
-                                    {
-                                        pictureBox.AllowDrop = true;
-                                        pictureBox.DragEnter += new DragEventHandler(pictureBox_DragEnter);
-                                        pictureBox.DragDrop += new DragEventHandler(pictureBox_DragDrop);
-                                    });
-
-                                }
-                                else if (tag == 0 && Convert.ToInt32(pictureBox.Tag) == 1)
-                                {
-                                    this.Invoke((MethodInvoker)delegate
-                                    {
-                                        pictureBox.Image = _validMoveimage;
-                                        pictureBox.AllowDrop = true;
-                                        pictureBox.DragEnter += new DragEventHandler(pictureBox_DragEnter);
-                                        pictureBox.DragDrop += new DragEventHandler(pictureBox_DragDrop);
-                                    });
-                                }
-
-
+                                pictureBox.DragEnter += new DragEventHandler(pictureBox_DragEnter);
+                                pictureBox.DragDrop += new DragEventHandler(pictureBox_DragDrop);
+                                // pictureBox.Image = _validMoveimage;
+                                pictureBox.AllowDrop = true;
+                                validPlaces.Add(pictureBox);
                             }
-
                         }
-                    }
+                        if (Convert.ToInt32(pictureBox.Tag) == tag + 1)
+                        {
+                            pictureBox.DragEnter += new DragEventHandler(pictureBox_DragEnter);
+                            pictureBox.DragDrop += new DragEventHandler(pictureBox_DragDrop);
+                            pictureBox.Image = _validMoveimage;
+                            pictureBox.AllowDrop = true;
+                            validPlaces.Add(pictureBox);
+                        }
 
+                    }
                 }
             }
         }
@@ -350,14 +311,19 @@ namespace WinFormsApp
 
         private void pictureBox_MouseDown(object sender, MouseEventArgs e)
         {
+
             var parent = ((Panel)((PictureBox)sender).Parent);
+            MarkTargets(parent);
+            if (((PictureBox)sender)?.Image == null)
+            {
+                return;
+            }
+           ((PictureBox)sender)?.DoDragDrop(((PictureBox)sender)?.Image, DragDropEffects.Move);
 
-            ((PictureBox)sender)?.DoDragDrop(((PictureBox)sender)?.Image, DragDropEffects.Move);
             _from = (string)parent.Tag;
+            _movedChecker = (PictureBox)sender;
 
-            ((PictureBox)sender).Image = _validMoveimage;
-            ((PictureBox)sender).BackColor = Color.Transparent;
-            // DisplayMovesOptions(int.Parse(_from));
+
         }
         /****************************************/
 
@@ -404,6 +370,8 @@ namespace WinFormsApp
 
             e.Effect = DragDropEffects.Move;
             ((PictureBox)sender).Image = (Image)e.Data.GetData(DataFormats.Bitmap);
+
+            _newChecker = (PictureBox)sender;
 
         }
         /****************************************/

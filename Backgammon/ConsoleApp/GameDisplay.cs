@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace ConsoleUI
 {
-    //this class gets input from user through console and shows the game moves
+
     class GameDisplay
     {
         private string playerOneSign = "O", playerTwoSign = "O", none = " ";
@@ -13,7 +13,6 @@ namespace ConsoleUI
         private ConsoleColor playerOneColor = ConsoleColor.Red, playerTwoColor = ConsoleColor.Cyan;
         private GameManager _manager;
         /****************************************/
-
 
         public void Start()
         {
@@ -33,7 +32,6 @@ namespace ConsoleUI
             _manager.StartPlaying(Get2Inputs);
         }
         /****************************************/
-
 
         private void GameOverHandler(Object sender, GameOverEventArgs e)
         {
@@ -86,11 +84,11 @@ namespace ConsoleUI
 
             GetGameType();
             Console.WriteLine("======================================================\n");
-            Console.Write("Player 1 you start from  1 and your stone sign is: ");
+            Console.Write("Player 1 you start from  1 and your checkers color is: ");
             Console.ForegroundColor = playerOneColor;
             Console.WriteLine(playerOneSign);
             Console.ResetColor();
-            Console.Write("Player 2 you start from 24 and your stone sign is: ");
+            Console.Write("Player 2 you start from 24 and your checkers color  is: ");
             Console.ForegroundColor = playerTwoColor;
             Console.WriteLine(playerTwoSign);
             Console.ResetColor();
@@ -150,17 +148,16 @@ namespace ConsoleUI
         public TryMove Get2Inputs()
         {
            
-            Console.WriteLine("Please pick from the list above");
+            Console.WriteLine("*Please pick from the list above");
             string[] input = new string[2];
-            System.Console.Write("Enter a lane to take stone from:");
+            System.Console.Write("Enter a lane to take a checker from:");
             input[0] = Console.ReadLine();
-            System.Console.Write("Enter a lane to pute stone on:");
+            System.Console.Write("Enter a lane to pute a checker on:");
             input[1] = Console.ReadLine();
 
             return (new TryMove(input[0], input[1]));
         }
         /****************************************/
-
 
         private void RollDiceHandler(Object sender, RollDiceEventArgs e)
         {

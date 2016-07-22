@@ -62,7 +62,6 @@ namespace GameLib
     /****************************************/
     public class GameOverEventArgs : EventArgs
     {
-       // public enum Victory {None, Regular, Mars, TurkishMars }
         public GameManager.Victory VictoryType { get; }
         public Player Winner { get; }
         public GameOverEventArgs(GameManager.Victory victory, Player winner)

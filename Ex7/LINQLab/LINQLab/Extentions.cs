@@ -27,15 +27,18 @@ namespace LINQLab
         // 2) (*)
         public static void CopyTo(this object obj, object other_obj)
         {
+            //get the readable properties and write to writable properties
             var properties = from p in obj.GetType().GetProperties()
-                             from q in other_obj.GetType().GetProperties()
-                             where p.Name == q.Name && p.CanRead && q.CanWrite &&
-                                 p.PropertyType == q.PropertyType
+                             from p2 in other_obj.GetType().GetProperties()
+                             where p.CanRead && p2.CanWrite &&
+                                   p.PropertyType == p2.PropertyType &&
+                                   p.Name == p2.Name
                              select new
                              {
                                  SrcProperty = p,
-                                 DstProperty = q
+                                 DstProperty = p2
                              };
+            //copy operation
             foreach (var property in properties)
                 property.DstProperty.SetValue(other_obj, property.SrcProperty.GetValue(obj, null), null);
 

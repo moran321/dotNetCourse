@@ -25,7 +25,7 @@ namespace LINQLab
                                  NumMethods = mscorlib.GetMethods().Length
                              };
 
-          
+
 
 
             // 1) b.
@@ -33,7 +33,7 @@ namespace LINQLab
             //  whose thread count is less than 5.
             //  Sort by process id
             var processes = from systemProcess in Process.GetProcesses()
-                            where systemProcess.IsAccessible() &&  systemProcess.Threads.Count < 5
+                            where systemProcess.IsAccessible() && systemProcess.Threads.Count < 5
                             orderby systemProcess.Id
                             select new
                             {   //tuple of process name id and start time
@@ -41,12 +41,13 @@ namespace LINQLab
                                 ID = systemProcess.Id,
                                 StartTime = systemProcess.StartTime
                             };
-                            
+
 
 
 
 
             // 1) c. (*)
+            //grouping the processes by their base priority.
             var grouped_processes = from systemProcess in Process.GetProcesses()
                                     where systemProcess.IsAccessible() && systemProcess.Threads.Count < 5
                                     orderby systemProcess.Id
@@ -60,13 +61,18 @@ namespace LINQLab
                                     //  orderby priority.Key
                                     select priority;
 
-          
+
             // 1) d.
             Console.WriteLine($"Total threads: {Process.GetProcesses().Sum(x => x.Threads.Count)}");
 
 
-
-
+            //2)test:
+            var this_obj = new TestObj("Moran", 201, "RamatGan");
+            var other_obj = new TestObj("Someone", 340, "Herzeliya");
+            Console.WriteLine($"other_obj before: { other_obj} ");
+            this_obj.CopyTo(other_obj);
+            Console.WriteLine($"other_obj after: { other_obj} ");
+           
             //test outputs:
 
             Console.WriteLine("\nintrefaces in mscorlib assembly:");

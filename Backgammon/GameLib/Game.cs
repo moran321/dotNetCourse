@@ -36,8 +36,7 @@ namespace GameLib
             return _backgammonLogic.GetDiceResults();
         }
 
-        //generate random move from the list of valid moves
-        //if there is no valid moves, return false
+
         public bool ComputerTurn(Player player, int indexOfMove)
         {
             Move move = GetPlayerOptions(player)[indexOfMove];
