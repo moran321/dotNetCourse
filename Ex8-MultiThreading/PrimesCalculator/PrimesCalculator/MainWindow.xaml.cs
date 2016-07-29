@@ -53,26 +53,12 @@ namespace PrimesCalculator
                 int lower = Convert.ToInt32(start_range_box.Text);
                 int upper = Convert.ToInt32(end_range_box.Text);
                 label.Content = "Calculation in progress";
-                try {
-                    var result = await CalcPrimesAsync(lower, upper);
-                    _cancelEvent.WaitOne(0);
-                    //proceed after finish the await
-                    label.Content = "Calculation finished";
-                    UpdateList(result);
 
-                }
-                catch (OperationCanceledException ex)
-                {
-
-                    label.Content = "Calculation canceled";
-                    listBox.Items.Clear();
-                    listBox.IsEnabled = false;
-                    calculate_button.IsEnabled = true;
-                    cancel_button.IsEnabled = false;
-
-                }
+                var result = await CalcPrimesAsync(lower, upper);
+                _cancelEvent.WaitOne(0);
+                //proceed after finish the await
                
-
+                UpdateList(result);
             }
             else
             {
@@ -121,7 +107,7 @@ namespace PrimesCalculator
                             throw new OperationCanceledException("canceled");
                         }
 
-                            isPrime = true;
+                        isPrime = true;
                         for (int j = 2; j < i; j++)
                         {
                             if (i % j == 0)
@@ -138,7 +124,7 @@ namespace PrimesCalculator
                     }
                 }, cancellationToken);
             }
-            catch (OperationCanceledException e)
+             catch (OperationCanceledException e)
             {
 
                 label.Content = "Calculation canceled";
@@ -146,9 +132,9 @@ namespace PrimesCalculator
                 listBox.IsEnabled = false;
                 calculate_button.IsEnabled = true;
                 cancel_button.IsEnabled = false;
-
+                return primes;
             }
-
+            label.Content = "Calculation finished";
             return primes;
         }
         /*****************************************/
