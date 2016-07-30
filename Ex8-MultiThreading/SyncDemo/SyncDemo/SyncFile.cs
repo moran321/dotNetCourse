@@ -26,7 +26,7 @@ namespace SyncDemo
                             writer.WriteLine("Process is writing to file" + Process.GetCurrentProcess().Id);
                         }
                     }
-                    catch (Exception e)
+                    catch (IOException e)
                     {
                         Console.WriteLine("Exception: " + e);
                         return;
