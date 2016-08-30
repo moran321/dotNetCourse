@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 
 
-namespace PriceCompare
+namespace PriceCompare.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -17,8 +17,9 @@ namespace PriceCompare
         public MainWindow()
         {
             InitializeComponent();
+            
             //navigate to the main page
-            var page = new FindPage();
+            var page = new SearchTypePage();
             mainFrame.Navigate(page);        
         }     
 

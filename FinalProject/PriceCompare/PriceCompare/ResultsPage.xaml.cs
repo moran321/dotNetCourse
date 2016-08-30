@@ -2,22 +2,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 using PriceCompare.ViewModel;
+using System.Linq;
 
-namespace PriceCompare
+namespace PriceCompare.View
 {
     /// <summary>
     /// Interaction logic for ResultsPage.xaml
@@ -25,31 +15,44 @@ namespace PriceCompare
     public partial class ResultsPage : Page
     {       
         private DataManager _manager;
+        private List<ViewCart> _carts;
         /*---------------------------------*/
 
         public ResultsPage(DataManager manager)
         {
             InitializeComponent();   
             _manager = manager;
-            CalculateCartPrice();
+            DisplayResults();
         }
-        /*---------------------------------*/
-        private void CalculateCartPrice()
-        {
-            //foreach supplier add item cost
-            var list = new List<string>();
-            List<Cart> carts = _manager.Carts;
-            foreach (Cart c in carts)
-            {
-                list.Add(c.ToString());
-            }
-            suppliers_listBox.ItemsSource = list;
-        } 
         /*---------------------------------*/
 
         private void DisplayResults()
         {
-          //  suppliers_listBox = manager.GetSuppliers();
+            suppliers_listBox.ItemsSource = _carts = _manager.GetCartsPrice();
+        }
+
+        private void suppliers_listBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //cheapest:
+
+            var items = (from i in _carts
+                        where i.ChainName.Equals(_carts.ElementAt(suppliers_listBox.SelectedIndex).ChainName)
+                        select i.Items).First();
+
+            var best = (from i in items
+                        orderby i.item.ItemPrice ascending
+                        select i).Take(3);
+
+            stackPanel_cheapest.Visibility = System.Windows.Visibility.Visible;
+            bestItems_listBox.ItemsSource = best;
+
+            //most expensive:
+            var worst = (from i in items
+                        orderby i.item.ItemPrice descending
+                        select i).Take(3);
+            stackPanel_expensive.Visibility = System.Windows.Visibility.Visible;
+            worsItems_listBox.ItemsSource = worst;
+
         }
         /*---------------------------------*/
 

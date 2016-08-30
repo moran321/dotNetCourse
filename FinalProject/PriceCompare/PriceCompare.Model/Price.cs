@@ -11,9 +11,10 @@ namespace PriceCompare.Model
         public int Id { get; set; }
 
         public string StoreId { get; set; }
+        public string ChainId { get; set; }
 
         [Required]
-        public string ItemPrice { get; set; }
+        public double ItemPrice { get; set; }
 
         public string UnitQty { get; set; }
 
@@ -21,9 +22,11 @@ namespace PriceCompare.Model
 
         public string UpdateDate { get; set; }
 
-       // public string ItemCode { get; set; }
+      
 
         public virtual Item Item { get; set; }
+
+       // public virtual Store Store { get; set; }
 
     }
 }

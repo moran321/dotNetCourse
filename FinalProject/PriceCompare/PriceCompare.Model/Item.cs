@@ -14,13 +14,13 @@ namespace PriceCompare.Model
             Prices = new HashSet<Price>();
         }
 
-       // public int Id { get; set; }
-        [Key]
-        [Column(Order = 0)]
+      //  [Key]
+     //   [Column(Order = 0)]
+        public int Id { get; set; }
+
         public string ItemCode { get; set; }
-        [Key]
-        [Column(Order = 1)]
-        public string ChainNumber { get; set; }
+   
+       // public string ChainNumber { get; set; }
 
         public string Name { get; set; }
 
@@ -30,8 +30,10 @@ namespace PriceCompare.Model
 
         public string UpdateTime { get; set; }
 
-        [StringLength(128)]
-        public string StoreId { get; set; }
+        public string ManufacturerName { get; set; }
+
+      //  [StringLength(128)]
+       // public string StoreId { get; set; }
 
       //  [StringLength(128)]
       //  public string ChainName { get; set; }

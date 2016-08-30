@@ -65,10 +65,26 @@ namespace ModelApp
             }
             //////
 
-            foreach (string zip in zipFiles)
+            Parallel.ForEach(zipFiles, (zip) =>
             {
+                var pathtofile = Path.Combine(zipPath, Path.GetFileNameWithoutExtension(zip) + ".xml");
+                if (File.Exists(pathtofile))
+                {
+                    File.Delete(pathtofile);
+                }
                 ZipFile.ExtractToDirectory(zip, zipPath);
-            }
+
+             });
+        
+            //foreach (string zip in zipFiles)
+            //{
+            //    var pathtofile = Path.Combine( zipPath,Path.GetFileNameWithoutExtension(zip)+".xml");
+            //    if (File.Exists(pathtofile))
+            //    {
+            //        File.Delete(pathtofile);
+            //    }
+            //    ZipFile.ExtractToDirectory(zip, zipPath);
+            //}
 
         }
         /*---------------------------------*/

@@ -24,5 +24,13 @@ namespace PriceCompare.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Store> Stores { get; set; }
 
+        public override int GetHashCode()
+        {
+            return ChainNumber.GetHashCode() ;
+        }
+        public override bool Equals(object obj)
+        {
+            return ChainNumber.Equals(((Chain)obj).ChainNumber);
+        }
     }
 }

@@ -7,8 +7,8 @@
     <ProjectGuid>{DD02F486-50EA-4EEC-8305-11A76D3F0843}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PriceCompare</RootNamespace>
-    <AssemblyName>PriceCompare</AssemblyName>
+    <RootNamespace>PriceCompare.View</RootNamespace>
+    <AssemblyName>PriceCompare.View</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -88,16 +88,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="FindPage.xaml.cs">
-      <DependentUpon>FindPage.xaml</DependentUpon>
+    <Compile Include="WherePage.xaml.cs">
+      <DependentUpon>WherePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="LoadingPage.xaml.cs">
+      <DependentUpon>LoadingPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="ResultsPage.xaml.cs">
       <DependentUpon>ResultsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SearchTypePage.xaml.cs">
+      <DependentUpon>SearchTypePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="SelectItemsPage.xaml.cs">
       <DependentUpon>SelectItemsPage.xaml</DependentUpon>
     </Compile>
-    <Page Include="FindPage.xaml">
+    <Page Include="WherePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="LoadingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -114,6 +124,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ResultsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SearchTypePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -149,12 +163,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="v.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="x.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PriceCompareServer\PriceCompare.ViewModel.csproj">

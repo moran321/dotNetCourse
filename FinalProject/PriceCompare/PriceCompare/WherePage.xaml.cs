@@ -6,16 +6,14 @@ using System.Windows.Controls;
 using PriceCompare.ViewModel;
 
 
-namespace PriceCompare
+namespace PriceCompare.View
 
 {
     /// <summary>
-    /// Interaction logic for FindPage.xaml
+    /// Interaction logic for WherePage.xaml
     /// </summary>
-    public partial class FindPage : Page
+    public partial class WherePage : Page
     {
-
-        ///    private enum EntryToSearch { Supplier, Branch };
         private bool isSupplier;
         private List<string> suppliersList;
         private List<string> branchesList;
@@ -23,12 +21,11 @@ namespace PriceCompare
         DataManager _manager;
         /*---------------------------------*/
 
-        public FindPage()
+        public WherePage(DataManager manager)
         {
+            _manager = manager;
             InitializeComponent();
-            _manager = new DataManager();
             suppliersList = _manager?.GetSuppliers();
-
         }
         /*---------------------------------*/
 
@@ -106,11 +103,10 @@ namespace PriceCompare
                 //none found
             }
 
-            //e.Handled = true;
         }
         /*---------------------------------*/
 
-        //get data from manager
+ 
         private void supplier_textBox_GotFocus(object sender, RoutedEventArgs e)
         {
             isSupplier = true;

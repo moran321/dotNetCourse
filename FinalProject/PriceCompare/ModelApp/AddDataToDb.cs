@@ -13,83 +13,75 @@ namespace ModelApp
     {
         public void AddStoresToDb(ICollection<Store> stores)
         {
+            //  var dbStores = new Dictionary<string, Store>();
             using (var db = new PricesContext())
             {
                 foreach (var s in stores)
                 {
                     try
                     {
-                        db.Stores.Add(s);
+                        // dbStores.Add($"{s.Chain.ChainNumber}_{s.StoreId}", db.Stores.Add(s));
+
+                        var contains = from st in db.Stores
+                                       where st.StoreId.Equals(s.StoreId) && st.Chain.ChainNumber.Equals(s.Chain.ChainNumber)
+                                       select st;
+
+
+                        if (!contains.Any())
+                        {
+                            db.Stores.Add(s);
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("contains store");
+                         //   db.Stores.Remove(contains.First());
+                         //   db.Stores.Add(s);
+                        }
                         db.SaveChanges();
-                      
                     }
                     catch (System.Data.Entity.Infrastructure.DbUpdateException e)
                     {
                         Console.WriteLine(e.InnerException.InnerException.Message);
-                       // db.Chains.Remove(s.Chain);
-                      //  db.Stores.Add(s);
-                        // throw;
+                        throw;
                     }
                 }
-                Console.WriteLine(" add stores ");
+                Console.WriteLine(" add stores of: *{0}*", stores.First().Chain.Name);
             }
+
+            // return dbStores;
         }
         /*---------------------------------*/
 
-        public void AddItemsToDb(ICollection<Item> items)
-        {
-            using (var db = new PricesContext())
-            {
-                foreach (var it in items)
-                {
-                    try
-                    {
-                        db.Items.Add(it);
-                        db.SaveChanges();
-                        Console.WriteLine(" add items ");
-                    }
-                    catch (System.Data.Entity.Infrastructure.DbUpdateException e)
-                    {
-                        Console.WriteLine(e.InnerException.InnerException.Message);
 
-                        string format1 = "yy-mm-dd HH:mm:ss";
-                        string format2 = "yy-mm-dd HH:mm";
-
-                        var dateTime = DateTime.ParseExact(it.UpdateTime, format1,
-                                            CultureInfo.InvariantCulture);
-                        var dateTime2 = DateTime.ParseExact(it.UpdateTime, format2,
-                                           CultureInfo.InvariantCulture);
-
-                        var oldItem = db.Items.Where(x => x.ItemCode.Equals(it.ItemCode)).FirstOrDefault();
-                        DateTime oldItemUpdataTime = DateTime.ParseExact(oldItem.UpdateTime, "yy-mm-dd HH:mm:ss",
-                                            CultureInfo.InvariantCulture);
-                        if (dateTime.CompareTo(oldItemUpdataTime) > 0) //the newer is later
-                        {
-                            db.Items.Remove(oldItem);
-                            db.Items.Add(it);
-                            db.SaveChanges();
-                        }
-                        else if (dateTime.CompareTo(oldItemUpdataTime) == 0)
-                        {
-                            //the same updateTime
-                        }
-
-                        // throw;
-                    }
-                }
-            }
-        }
-        /*---------------------------------*/
 
         public void AddPricesToDb(ICollection<Price> prices)
         {
             using (var db = new PricesContext())
             {
+
                 foreach (var p in prices)
                 {
                     try
                     {
-                        db.Prices.Add(p);
+                        //  dbStores.Add($"{s.Chain.ChainNumber}_{s.StoreId}", db.Stores.Add(s));
+                        var contains = from pr in db.Prices
+                                       where pr.StoreId.Equals(p.StoreId) 
+                                       && pr.ChainId.Equals(p.ChainId) 
+                                       && pr.Item.ItemCode.Equals(p.Item.ItemCode)
+                                       select pr;
+                        if (!contains.Any())
+                        {
+
+                            db.Prices.Add(p);
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("contains Price");
+                           // db.Prices.Remove(contains.First());
+                          //  db.Prices.Add(p);
+                        }
                         db.SaveChanges();
                     }
                     catch (System.Data.Entity.Infrastructure.DbUpdateException e)
@@ -99,50 +91,21 @@ namespace ModelApp
                             innerException.Number == 2601))
                         {
                             Console.WriteLine(e.InnerException.InnerException.Message);
-                           // db.Prices.Remove(p);
-                           // db.Prices.Add(p);
+                            throw;
                         }
                         else
                         {
+                            Console.WriteLine(e.InnerException.InnerException.Message);
                             throw;
                         }
                     }
-                  
-
                 }
-                Console.WriteLine(" add prices ");
+                Console.WriteLine(" add prices of: *{0}*", prices.First().ChainId);
             }
         }
         /*---------------------------------*/
 
 
-            /*
-        public void AddChainToDb()
-        {
-            var chains = new List<Chain>()
-        {
-            new Chain() {Name="hazihinam", ChainId= 7290700100008 },
-            new Chain() {Name="mega", ChainId= 7290055700007 },
-            new Chain() {Name="ramilevi", ChainId= 7290058140886 },
-            new Chain() {Name="shufersal", ChainId= 7290027600007 },
-        };
-
-            using (var db = new PricesContext())
-            {
-                try
-                {
-                    db.Chains.AddRange(chains);
-                    db.SaveChanges();
-                }
-                catch (System.Data.Entity.Infrastructure.DbUpdateException e)
-                {
-                    Console.WriteLine(e.InnerException.InnerException.Message);
-                    // throw;
-                }
-            }
-        }
-
         /*---------------------------------*/
-
     }
 }

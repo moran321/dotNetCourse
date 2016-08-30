@@ -19,7 +19,7 @@ namespace PriceCompare.Model
         public DbSet<Price> Prices { get; set; }
 
 
-        public PricesContext() : base("PricesDataBase")
+        public PricesContext() : base("PricesDB")
         {
 
         }
@@ -45,7 +45,7 @@ namespace PriceCompare.Model
                 //.HasForeignKey(e => e.Item_Id);
 
             modelBuilder.Entity<Store>()
-                .HasMany(e => e.Items);
+                .HasMany(e => e.Prices);
                // .WithOptional(e => e.Store)
                // .HasForeignKey(e => new { e.Store_StoreId, e.Store_ChainName });
                 

@@ -3,121 +3,162 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PriceCompare.Model;
-using System.Data.Entity;
+
 
 namespace PriceCompare.ViewModel
 {
     //this class connecting between GUI and DB
-    //the GUI asks for data and this class searches the data in DB
     public class DataManager
     {
-        DataGetter _dataGetter;
-        public IEnumerable<Item> Selecteditems { get; private set; }
-        public Chain SelectedChain { get; private set; }
-        public Store SelectedStore { get; private set; }
-        public List<Cart> Carts { get; private set; }
+        private DataGetter _dataGetter;
+        public SearchType SearchType { get; set; }
+        // public List<string> SuppliersList  { get; set; }
+        public Cart Cart { get; private set; }
+        /*---------------------------------*/
 
         public DataManager()
         {
             _dataGetter = new DataGetter();
-            Carts = new List<Cart>();
+            Cart = new Cart();
         }
-
         /*---------------------------------*/
 
 
-        public void SetSelecteditems(IEnumerable<string> items)
+
+        public Price GetPrice(string chain_name, string store_name, string item_code)
         {
-            var list = _dataGetter.GetItemsInStore(SelectedChain.Name, SelectedStore.Name);
-
-            var q = from sp in list
-                    join p in items on sp.Name equals p.ToString()
-                    select sp;
-
-            // Selecteditems = list.Where(x => x.Name.Equals(items.Select(y => y.ToString())));
-            Selecteditems = q;
-
+            return _dataGetter.GetPrice(chain_name, store_name, item_code);
         }
         /*---------------------------------*/
 
-        public void SetSelection(string supplier, string branch)
+
+
+        public void AddSelectedItems(IEnumerable<SelectedItem> selectedItems)
         {
-            SelectedStore = _dataGetter.GetStore(supplier, branch);
-            SelectedChain = _dataGetter.GetChain(supplier);
+            Cart.Items = new List<ItemQuantity>(); //reset
+            var itemQuantity = from var in selectedItems
+                               select new ItemQuantity
+                               {
+                                   Item = _dataGetter.GetItemByCode(var.item.ItemCode),
+                                   Quantity = var.Quantity
+                               };
+            Cart.Items.AddRange(itemQuantity);
         }
         /*---------------------------------*/
 
-
-        public List<Cart> CalculateCartsPrice()
+        public void RemoveItem(ItemQuantity item)
         {
-            bool isHaveAll = true;
-            double totalPrice = 0;
-            var chainsList = _dataGetter.GetChains();
-            foreach (var ch in chainsList)
-            {
-                var storesList = _dataGetter.GetStoresOfChain(ch.Name);
-                foreach (var st in storesList) 
-                {
-                    //calculate cart total price
-                    foreach (Item item in Selecteditems)
-                    {
-                        var price = _dataGetter.GetPrice(ch, st, item);
-                        if (price == null) //one item not found
-                        {
-                            isHaveAll = false;
-                            break;
-                        }
-                           
-                        double d_price;
-                        if (double.TryParse(price.ItemPrice, out d_price))
-                        {
-                            totalPrice += d_price;
-                        }
-                    }
-                    if (totalPrice > 0 && isHaveAll)
-                    {
-                        var cart = new Cart() { Chain = ch, Store = st, CartPrice = Convert.ToInt32(Math.Round(totalPrice)), Items = Selecteditems };
-                        Carts.Add(cart);
-                    }
-                    totalPrice = 0;
-                }
-
-            }
-            return Carts;
+            Cart.Items.Remove(item);
         }
         /*---------------------------------*/
 
 
 
-        public List<string> GetItems()
+        public void SetSelection(string chain_name, string store_name)
         {
-            var list = _dataGetter.GetItemsInStore(SelectedChain.Name, SelectedStore.Name);
-            var names = new List<string>();
-            foreach (var c in list)
-            {
-                names.Add(c.Name);
-            }
-            return names;
+            Cart.StoreName = store_name;
+            Cart.ChainName = chain_name;
         }
         /*---------------------------------*/
+
+
+        //return the cheapest cart in each chain 
+        public List<ViewCart> GetCartsPrice()
+        {
+            var all_carts = _dataGetter.GetFullCartPrices(Cart.Items);
+
+            var carts = from r in all_carts
+                        orderby r.CartPrice ascending
+                        select r;
+
+
+            //var cheapest = from c in carts
+            //             group c by c.ChainName into grp
+            //             select grp.First();
+
+
+            //var result = from r in cheapest
+            //             select new ViewCart
+            //            {
+            //                ChainName = r.ChainName,
+            //                StoreName = r.StoreName,
+            //                CartPrice = r.CartPrice,
+            //                Items = Convert(r.Items)
+            //            };
+
+            var allitemsstores = from c in carts
+                                 where c.Items.Count == Cart.Items.Count
+                                 select c;
+
+            var result = from r in allitemsstores
+                         select new ViewCart
+                         {
+                             ChainName = r.ChainName,
+                             StoreName = r.StoreName,
+                             CartPrice = r.CartPrice,
+                             Items = Convert(r.Items)
+                         };
+
+            return result.ToList();
+        }
+        /*---------------------------------*/
+
+
+        private List<SelectedItem> Convert(List<ItemQuantity> items)
+        {
+            var converted = from i in items
+                            select new SelectedItem
+                            {
+                                item = new ViewItem() { ItemCode = i.Item.ItemCode, ItemName = i.Item.Name },
+                                Quantity = i.Quantity,
+                                Price = i.Price
+                            };
+            return converted.ToList();
+        }
+        /*---------------------------------*/
+
+        /*
+    public IEnumerable GetCommonItems()
+    {
+        var items = _dataGetter.GetCommonItems();
+        var list = from it in items
+                   select new
+                   {
+                       it.Name,
+                       it.ItemCode
+                   };
+        return list;
+    }
+    /*---------------------------------*/
+
+        public List<ViewItem> GetItemsInStore()
+        {
+            var items = _dataGetter.GetItemsInStore(Cart.ChainName, Cart.StoreName);
+            var list = from it in items
+                       select new ViewItem
+                       {
+                           ItemName = it.Name,
+                           ItemCode = it.ItemCode
+                       };
+            return list.ToList();
+        }
+        /*---------------------------------*/
+
 
 
         public List<string> GetStoreNamesOfChain(string chain_name)
         {
             var storesList = _dataGetter.GetStoresOfChain(chain_name);
-            var names = new List<string>();
-            foreach (var c in storesList)
-            {
-                names.Add(c.Name);
-            }
+            var list = from it in storesList
+                       select
+                           it.Name;
 
-            return names;
+
+            return list.ToList();
         }
         /*---------------------------------*/
 
 
-
-        //get all suppliers
         public List<string> GetSuppliers()
         {
             return GetChainsNames();
