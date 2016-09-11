@@ -11,22 +11,24 @@ namespace PriceCompare.Model
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Chain()
         {
-            Stores = new HashSet<Store>();
+            Stores = new List<Store>();
         }
 
-        [Key]
-        public long? Id { get; set; }
+    //     public int Id { get; set; }
 
-        public string ChainNumber { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [Required]
+        public long ChainNumber { get; set; }
 
         public string Name { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+       // [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Store> Stores { get; set; }
 
         public override int GetHashCode()
         {
-            return ChainNumber.GetHashCode() ;
+            return ChainNumber.GetHashCode();
         }
         public override bool Equals(object obj)
         {

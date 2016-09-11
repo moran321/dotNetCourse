@@ -29,7 +29,7 @@
             </Button>
         </DockPanel>
         <StackPanel Height="49" VerticalAlignment="Top" Background="#FFA4B9D0">
-            <Label x:Name="label" Content="בחר סוג חיפוש" Height="48" FontSize="21" />
+            <Label x:Name="label" Content="בחר סוג חיפוש" Height="48" HorizontalContentAlignment="Center" FontSize="21" FontWeight="Bold" />
         </StackPanel>
 
     </Grid>

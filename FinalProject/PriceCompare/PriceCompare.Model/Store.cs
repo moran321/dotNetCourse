@@ -14,9 +14,17 @@ namespace PriceCompare.Model
             Prices = new HashSet<Price>();
         }
 
-        public int Id { get; set; }
 
-        public string StoreId { get; set; }
+        //  public int Id { get; set; }
+
+        [Key]
+        [Column(Order = 0)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long StoreId { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        public long ChainId { get; set; }
 
         public string Name { get; set; }
 
@@ -25,20 +33,25 @@ namespace PriceCompare.Model
         public string City { get; set; }
 
 
+        [ForeignKey("ChainId")]
         public virtual Chain Chain { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Price> Prices { get; set; }
 
+
         public override int GetHashCode()
         {
-            return Chain.Id.GetHashCode() ^ StoreId.GetHashCode();
+            // return Chain.Id.GetHashCode() ^ StoreId.GetHashCode();
+            return Chain.ChainNumber.GetHashCode() ^ StoreId.GetHashCode();
+
         }
         public override bool Equals(object obj)
         {
             var duplicate = (Store)obj;
-            return Chain.Id.Equals(duplicate.Chain.Id) && StoreId.Equals(duplicate.StoreId);
+            return Chain.ChainNumber.Equals(duplicate.Chain.ChainNumber) && StoreId.Equals(duplicate.StoreId);
+            // return Chain.Id.Equals(duplicate.Chain.Id) && StoreId.Equals(duplicate.StoreId);
         }
-         
+
     }
 }

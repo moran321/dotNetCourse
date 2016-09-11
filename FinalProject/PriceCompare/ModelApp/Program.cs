@@ -3,7 +3,7 @@ using System;
 using System.Data.Entity;
 using System.Threading.Tasks;
 
-namespace ModelApp
+namespace PriceCompare.Model.App
 {
     public class Program
     {
@@ -14,15 +14,25 @@ namespace ModelApp
 
         static void Main(string[] args)
         {
-           // Database.SetInitializer(new DropCreateDatabaseIfModelChanges<PricesContext>());
-            Database.SetInitializer(new DropCreateDatabaseAlways<PricesContext>());
+
+            //download files direct from web
+           // var d = new Download();
+          //  d.Run();
+
+            
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<PricesContext>());
+         //   Database.SetInitializer(new DropCreateDatabaseAlways<PricesContext>());
 
             DbBuilder manager = new DbBuilder();
             manager.InitializeDB();
 
             Task.WaitAll();
             Console.WriteLine("************done*************");
+          
+     
             Console.ReadLine();
+
+
         }
 
     }

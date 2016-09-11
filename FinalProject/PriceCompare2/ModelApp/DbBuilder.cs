@@ -9,7 +9,6 @@ using System.Xml;
 using PriceCompare.Model;
 using System.Xml.Linq;
 using System.Data.SqlClient;
-using System.Collections;
 
 /*
 this class parses xml files and builds the database
@@ -18,12 +17,11 @@ namespace PriceCompare.Model.App
 {
     class DbBuilder
     {
-        //working directory where the data found
-        string _dataPath = @"D:\prices\myChains";
+
+        string _dataPath = @"D:\prices\myChains";   //working directory where the data found
         ExtractArchiveFiles _archiveExtract;
         AddDataToDb _dbEditor;
         Dictionary<string, Chain> _chains;
-
 
         /*---------------------------------*/
 
@@ -38,8 +36,6 @@ namespace PriceCompare.Model.App
         public void InitializeDB()
         {
             DirectoryInfo[] dirInfo = new DirectoryInfo(_dataPath).GetDirectories();
-
-
             Parallel.ForEach(dirInfo, (dir) =>
             {
                 InitializeStoresData(dir.Name);
@@ -63,26 +59,24 @@ namespace PriceCompare.Model.App
             string zipPath = Path.Combine(_dataPath, dirName);
             string[] zipFiles = Directory.GetFiles(zipPath, "Stores*.*z*");
 
-            _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //@@@@@@@@@@@@@@@@ uncomment
+            _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //unzip
 
-            //read xml files
+            //get xml files
             string[] xmlStoresFiles = Directory.GetFiles(zipPath, "Stores*.xml");
 
-           var stores = new List<Store>();
+            List<Store> stores = new List<Store>();
             foreach (string xmlFile in xmlStoresFiles)
             {
                 //  var list = ParseStoresXml(xmlFile);
-                stores.AddRange(ParseStoresXml(xmlFile));
+                stores.AddRange(ParseStoresXml(xmlFile)); //parse xml and add to db
                 Console.WriteLine($"xmlStoresFiles parse");
                 // _dbEditor.AddStoresToDb(list); 
             }
 
-            // _dbEditor.AddChainsToDb(_chains.Values);
-            //  _dbEditor.AddStoresToDb(stores); //@@@@@@@@@@@@@@@@@@@@@@@@@
-            //    _dbEditor.InsertOrUpdate(_chains.Values);
-           
-            _dbEditor.InsertOrUpdate(stores);
-          //  _chains.Clear();
+         //   _dbEditor.AddChainsToDb(_chains.Values);
+            _dbEditor.AddStoresToDb(stores);
+
+           // _chains.Clear();
 
         }
         /*---------------------------------*/
@@ -94,21 +88,29 @@ namespace PriceCompare.Model.App
             string zipPath = Path.Combine(_dataPath, dirName);
             string[] zipFiles = Directory.GetFiles(zipPath, "PriceFull*.*z*");
 
-            _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //@@@@@@@@@@@@@@@@ uncomment
+            _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //unzip
 
             string[] xmlFiles = Directory.GetFiles(zipPath, "PriceFull*.xml");
 
-
-            Parallel.ForEach(xmlFiles, (xmlFile) =>
-            {
-                AddPricesXmlToDb(xmlFile);
-            });
-
-            //foreach (string xmlFile in xmlFiles)
+            //Parallel.ForEach(xmlFiles, (xmlFile) =>
             //{
             //    AddPricesXmlToDb(xmlFile);
-            //}
+            //});
 
+            var prices = new List<Price>();
+            foreach (string xmlFile in xmlFiles)
+            {
+                prices.AddRange(ParsePricesXml(xmlFile));
+            }
+            /////////////// add items then prices @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+            //var items = new Dictionary<long,Item>();
+            //foreach (Price i in prices)
+            //{
+            //    if (!items.ContainsKey(i.Item.ItemCode))
+            //        items.Add(i.Item.ItemCode, i.Item);
+            //}
+           // _dbEditor.AddItemsToDb(items.Values);
+            _dbEditor.AddPricesToDb(prices);
 
         }
         /*---------------------------------*/
@@ -137,8 +139,6 @@ namespace PriceCompare.Model.App
             if (!_chains.ContainsValue(chain))
                 _chains.Add(chain.Name, chain);
 
-            _dbEditor.InsertOrUpdate(new List<Chain>() { chain });
-
             foreach (XmlNode xn in xnList)
             {
                 var storeId = xn.SelectSingleNode("StoreId | StoreID | Storeid | STOREID").InnerText; //@@@@@@@@@@@@@
@@ -152,7 +152,7 @@ namespace PriceCompare.Model.App
                     Name = name,
                     Adress = address,
                     City = city,
-                    //Chain = chain,
+                    Chain = chain,
                     ChainId = chain.ChainNumber
                 };
                 storesList.Add(store);
@@ -163,7 +163,9 @@ namespace PriceCompare.Model.App
 
 
 
-        private void AddPricesXmlToDb(string xmlFile)
+
+
+        private List<Price> ParsePricesXml(string xmlFile)
         {
 
             XmlDocument xml = new XmlDocument();
@@ -187,11 +189,9 @@ namespace PriceCompare.Model.App
 
             var pricesList = new List<Price>();
             var itemsList = new List<Item>();
-
-
             object locker = new object();
 
-            Parallel.ForEach(items.Take(600), //@@@@@@@@@@@@@@@@@@@@@@@@ remove take
+            Parallel.ForEach(items.Take(600), //@@@@@@@@@@@@@@@@@@@@@@@@@@@ remove take
                () => { return new List<Price>(); },
               (el, loopState, local_prices) =>
               {
@@ -220,6 +220,7 @@ namespace PriceCompare.Model.App
                   var price = new Price()
                   {
                       Item = item,
+                      ItemId = item.ItemCode,
                       ItemPrice = itemPrice,
                       UnitQty = unitQty,
                       UpdateDate = updateDate,
@@ -242,8 +243,8 @@ namespace PriceCompare.Model.App
                }
                ));
 
-            //_dbEditor.AddPricesToDb(pricesList);
-            _dbEditor.InsertOrUpdate(pricesList);
+            return pricesList;
+            //  _dbEditor.AddPricesToDb(pricesList);
         }
         /*---------------------------------*/
 

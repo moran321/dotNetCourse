@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ModelApp
+namespace PriceCompare.Model.App
 {
     public class ExtractArchiveFiles
     {

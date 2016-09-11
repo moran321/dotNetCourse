@@ -14,13 +14,12 @@ namespace PriceCompare.Model
             Prices = new HashSet<Price>();
         }
 
-      //  [Key]
-     //   [Column(Order = 0)]
-        public int Id { get; set; }
+       // public int Id { get; set; }
 
-        public string ItemCode { get; set; }
-   
-       // public string ChainNumber { get; set; }
+
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        public long ItemCode { get; set; }
 
         public string Name { get; set; }
 
@@ -32,18 +31,19 @@ namespace PriceCompare.Model
 
         public string ManufacturerName { get; set; }
 
-      //  [StringLength(128)]
-       // public string StoreId { get; set; }
-
-      //  [StringLength(128)]
-      //  public string ChainName { get; set; }
-
-
-     //   public virtual Store Store { get; set; }
-
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Price> Prices { get; set; }
 
 
+        public override int GetHashCode()
+        {        
+            return ItemCode.GetHashCode() ^ Name.GetHashCode();
+
+        }
+        public override bool Equals(object obj)
+        {
+            var duplicate = (Item)obj;
+            return ItemCode.Equals(duplicate.ItemCode) && Name.Equals(duplicate.Name);
+        }
     }
 }

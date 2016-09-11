@@ -27,28 +27,20 @@ namespace PriceCompare.Model
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
 
-            /*
-            modelBuilder.Entity<Chain>().ToTable("Chains");
-            modelBuilder.Entity<Store>().ToTable("Stores");
-            modelBuilder.Entity<Item>().ToTable("Items");
-            modelBuilder.Entity<Price>().ToTable("Prices");
-            */
 
-            modelBuilder.Entity<Chain>()
-            .HasMany(e => e.Stores)
-            .WithOptional(e => e.Chain);
-            //.HasForeignKey(e => e.ChainId);
-
-            modelBuilder.Entity<Item>()
-                .HasMany(e => e.Prices)
-                .WithOptional(e => e.Item);
-                //.HasForeignKey(e => e.Item_Id);
-
+            //one-to-many 
             modelBuilder.Entity<Store>()
-                .HasMany(e => e.Prices);
-               // .WithOptional(e => e.Store)
-               // .HasForeignKey(e => new { e.Store_StoreId, e.Store_ChainName });
-                
+                        .HasRequired(s => s.Chain)
+                        .WithMany(s => s.Stores)
+                        .HasForeignKey(s => s.ChainId);
+            // .HasForeignKey(e => new { e.StoreId, e.ChainId });
+
+
+            //one-to-many 
+            modelBuilder.Entity<Price>()
+                .HasRequired<Item>(s => s.Item)
+                .WithMany(s => s.Prices);
+
         }
 
         /*---------------------------------*/

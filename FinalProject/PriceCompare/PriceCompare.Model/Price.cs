@@ -8,10 +8,11 @@ namespace PriceCompare.Model
 
     public partial class Price
     {
-        public int Id { get; set; }
+        public int PriceId { get; set; }
 
-        public string StoreId { get; set; }
-        public string ChainId { get; set; }
+        public long StoreId { get; set; }
+
+        public long ChainId { get; set; }
 
         [Required]
         public double ItemPrice { get; set; }
@@ -22,11 +23,11 @@ namespace PriceCompare.Model
 
         public string UpdateDate { get; set; }
 
-      
-
         public virtual Item Item { get; set; }
 
-       // public virtual Store Store { get; set; }
+       // [ForeignKey("StoreId")]
+      //  public virtual Store Store { get; set; } //@@
+
 
     }
 }

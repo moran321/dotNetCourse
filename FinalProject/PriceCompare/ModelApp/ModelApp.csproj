@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="AddDataToDb.cs" />
     <Compile Include="DbBuilder.cs" />
+    <Compile Include="Download.cs" />
     <Compile Include="ExtractArchiveFiles.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

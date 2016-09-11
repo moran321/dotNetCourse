@@ -33,6 +33,7 @@ namespace PriceCompare.ViewModel
         }
         /*---------------------------------*/
 
+            
         public List<Item> GetItemsInStore(string chain_name, string store_name)
         {
             using (var db = new PricesContext())
@@ -50,10 +51,11 @@ namespace PriceCompare.ViewModel
 
         public Item GetItemByCode(string itemcode)
         {
+            long code = Convert.ToInt64(itemcode);
             using (var db = new PricesContext())
             {
                 var item = from i in db.Items
-                           where i.ItemCode == itemcode
+                           where i.ItemCode == code
                            select i;
                 return item.FirstOrDefault();
             }
@@ -167,7 +169,7 @@ namespace PriceCompare.ViewModel
                 var joined = (from store in db.Stores
                               join p in db.Prices on new { ChainId = store.Chain.ChainNumber, store.StoreId } equals new { p.ChainId, p.StoreId }
                               where itemsCodes.Contains(p.Item.ItemCode)
-                              select new { StorId = store.Id, ChainName = store.Chain.Name,
+                              select new { StorId = store.StoreId, ChainName = store.Chain.Name,
                                   StoreName = store.Name, Item = p.Item, Price = p.ItemPrice });
 
 

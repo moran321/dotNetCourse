@@ -10,9 +10,9 @@ namespace PriceCompare.View
 
 {
     /// <summary>
-    /// Interaction logic for FindPage.xaml
+    /// Interaction logic for WherePage.xaml
     /// </summary>
-    public partial class FindPage : Page
+    public partial class WherePage : Page
     {
         private bool isSupplier;
         private List<string> suppliersList;
@@ -21,12 +21,11 @@ namespace PriceCompare.View
         DataManager _manager;
         /*---------------------------------*/
 
-        public FindPage(DataManager manager)
+        public WherePage(DataManager manager)
         {
-            InitializeComponent();
             _manager = manager;
+            InitializeComponent();
             suppliersList = _manager?.GetSuppliers();
-
         }
         /*---------------------------------*/
 
@@ -104,11 +103,10 @@ namespace PriceCompare.View
                 //none found
             }
 
-            //e.Handled = true;
         }
         /*---------------------------------*/
 
-        //get data from manager
+ 
         private void supplier_textBox_GotFocus(object sender, RoutedEventArgs e)
         {
             isSupplier = true;
