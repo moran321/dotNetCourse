@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using PriceCompare.Model.App;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -8,125 +10,93 @@ namespace PriceCompare.Model.App
 {
     public static class Extentions
     {
-        /*
-        public static Item AddOrUpdate<T>(this DbSet<T> dbset, Item item, PricesContext db) where T : class
-        {
-            db.Entry(item).State = item.Id == 0 ?
-                    EntityState.Added :
-                    EntityState.Modified;
 
-            if (db.Entry(item).State == EntityState.Modified)
+
+        public static Item GetItem<T>(this DbSet<T> dbset, Price price, PricesContext db) where T : class
+        {
+            var p = price as Price;
+            var exist_item = (from it in db.Items
+                              where it.ItemCode == p.Item.ItemCode
+                              select it).FirstOrDefault();
+
+            if (exist_item == null)
             {
-                return item;
+                return p.Item;
             }
-            var newEntity = db.Set<Item>().Add(item);
-            return newEntity;
+            return exist_item;
+
         }
         /*---------------------------------*/
 
-        // public static System.Data.Entity.Infrastructure.DbEntityEntry<T> GetEntity<T>(this DbSet<T> dbset, T obj, PricesContext db) where T : class
-        public static T AddOrUpdate<T>(this DbSet<T> dbset, T obj, PricesContext db) where T : class
+        public static System.Data.Entity.Infrastructure.DbEntityEntry<IEntity> GetEntity<T>(this DbSet<T> dbset, IEntity obj, PricesContext db) where T : class, IEntity
         {
-            var entity_obj = obj as IEntity;
-
-            db.Entry(obj).State = entity_obj.Id == 0 ?
+            db.Entry(obj).State = obj.Id == 0 ?
                       EntityState.Added :
                       EntityState.Modified;
 
-            //if the entity already exist in db
             if (db.Entry(obj).State == EntityState.Modified)
             {
-                //TODO: update by the latest date
-                return obj;
+                return db.Entry(obj);
             }
-            var newEntity = db.Set<T>().Add(obj);
-            return newEntity;
+            return null;
+
         }
         /*---------------------------------*/
 
     }
-    /*------------------------------------------------------------*/
+    /*---------------------------------*/
 
     public class AddDataToDb
     {
 
-
-
-        public void InsertOrUpdate(ICollection<Price> entity)
-        {
-            using (var db = new PricesContext())
-            {
-                foreach (var en in entity)
-                {
-                    try
-                    {
-                        var item = db.Set<Item>().AddOrUpdate((en.Item), db);
-                        en.Item = item;
-                        var price = db.Set<Price>().Add(en);
-
-                        db.SaveChanges();
-                    }
-                    catch (System.Data.Entity.Infrastructure.DbUpdateException e)
-                    {
-                        Console.WriteLine(e.InnerException.InnerException.Message);
-                    }
-                }
-            }
-            Console.WriteLine("Price added");
-        }
-        /*---------------------------------*/
-
-
-
-
-        public void InsertOrUpdate(ICollection<Store> entity)
-        {
-            using (var db = new PricesContext())
-            {
-                foreach (var en in entity)
-                {
-                    try
-                    {
-                        var chain = db.Set<Chain>().AddOrUpdate((en.Chain), db);
-                        en.Chain = chain;
-                        var store = db.Set<Store>().Add(en);
-
-                        db.SaveChanges();
-                    }
-                    catch (System.Data.Entity.Infrastructure.DbUpdateException e)
-                    {
-                        Console.WriteLine(e.InnerException.InnerException.Message);
-                    }
-                }
-            }
-            Console.WriteLine("Store added");
-        }
-        /*---------------------------------*/
-
-            /*
         public void InsertOrUpdate<T>(ICollection<T> entity) where T : class
         {
+            bool is_price = false;
+            var p = entity.First() as Price;
+            if (p != null)
+            {
+                is_price = true;
+            }
             using (var db = new PricesContext())
             {
                 foreach (var en in entity)
                 {
                     try
                     {
-
-                        if (db.Entry(en).State == EntityState.Detached)
+                        if (is_price)
                         {
-                            var exist_entry = db.Set<T>().AddOrUpdate(en, db);
+                            
+                            var item = db.Set<T>().GetItem((en as Price), db);
+                            //  var entry = db.Entry(price);
+
+                            (en as Price).Item = item;
+                            var price = db.Set<Price>().Add((en as Price));
+                            // entry.CurrentValues.SetValues(entry);
+                            // entry.Property(e => e.Item).IsModified = true;
+                            //entry.State = EntityState.Modified;
                             db.SaveChanges();
 
+                        }
+                        else if (db.Entry(en).State == EntityState.Detached)
+                        {
+                            //var exist_en = db.Set<T>().Find(en);
+                            //if (exist_en != null)
+                            //{
+                           var exist_entry = db.Set<IEntity>().GetEntity((en as IEntity),db);
+                            if (exist_entry == null)
+                            {
+                                db.Set<T>().Add(en);
+                                db.SaveChanges();
+                            }
                         }
                     }
                     catch (System.Data.Entity.Infrastructure.DbUpdateException e)
                     {
                         Console.WriteLine(e.InnerException.InnerException.Message);
+                        //Console.WriteLine("Exception");
                     }
-
                 }
-                Console.WriteLine("entity added");
+                Console.WriteLine(" add entity ");
             }
         }
         /*---------------------------------*/
@@ -153,30 +123,28 @@ namespace PriceCompare.Model.App
     }
     /*---------------------------------*/
 
-
-        /*
-    public void AddChainsToDb(ICollection<Chain> chains)
-    {
-        if (!chains.Any())
-            return;
-        using (var db = new PricesContext())
+        public void AddChainsToDb(ICollection<Chain> chains)
         {
-            foreach (var c in chains)
+            if (!chains.Any())
+                return;
+            using (var db = new PricesContext())
             {
-                try
+                foreach (var c in chains)
                 {
-                    db.Chains.Add(c);
-                    db.SaveChanges();
-                }
-                catch (System.Data.Entity.Infrastructure.DbUpdateException e)
-                {
-                    Console.WriteLine(e.InnerException.InnerException.Message);
+                    try
+                    {
+                        db.Chains.Add(c);
+                        db.SaveChanges();
+                    }
+                    catch (System.Data.Entity.Infrastructure.DbUpdateException e)
+                    {
+                        Console.WriteLine(e.InnerException.InnerException.Message);
+                    }
                 }
             }
+            Console.WriteLine(" add chains");
         }
-        Console.WriteLine(" add chains");
-    }
-    /*---------------------------------*/
+        /*---------------------------------*/
 
         /*
     public void AddStoresToDb(ICollection<Store> stores)

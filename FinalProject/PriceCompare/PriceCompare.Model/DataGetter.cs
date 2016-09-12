@@ -1,13 +1,11 @@
-﻿using PriceCompare.Model;
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
 
-namespace PriceCompare.ViewModel
+namespace PriceCompare.Model
 {
-
+    //this class gets data from db 
     public class DataGetter
     {
 
@@ -22,18 +20,28 @@ namespace PriceCompare.ViewModel
         }
         /*---------------------------------*/
 
+        public IEnumerable<string> GetCities()
+        {
+            using (var db = new PricesContext())
+            {
+                var cities = from s in db.Stores
+                             select s.City;
+                return cities.ToList();
+            }
+        }
+        /*---------------------------------*/
+
         public IEnumerable<Store> GetStoresOfChain(string chain_name)
         {
             using (var db = new PricesContext())
             {
-                //  var list = db.Stores.Where((c) => c.ChainName.Equals(chain_name)).ToList();
                 var list = db.Stores.Where((c) => c.Chain.Name.Equals(chain_name)).ToList();
                 return list;
             }
         }
         /*---------------------------------*/
 
-            
+
         public List<Item> GetItemsInStore(string chain_name, string store_name)
         {
             using (var db = new PricesContext())
@@ -97,7 +105,7 @@ namespace PriceCompare.ViewModel
 
         public Price GetPrice(string chain_name, string store_name, string item_code)
         {
-           return GetPrice(GetChain(chain_name), GetStore(chain_name, store_name), item_code);
+            return GetPrice(GetChain(chain_name), GetStore(chain_name, store_name), item_code);
         }
         /*---------------------------------*/
 
@@ -107,10 +115,10 @@ namespace PriceCompare.ViewModel
             {
 
                 var price = (from p in db.Prices
-                            where p.Item.ItemCode.Equals(itemCode)
-                            && p.StoreId.Equals(store.StoreId)
-                            && p.ChainId.Equals(chain.ChainNumber)
-                            select p).First();
+                             where p.Item.ItemCode.Equals(itemCode)
+                             && p.StoreId.Equals(store.StoreId)
+                             && p.ChainId.Equals(chain.ChainNumber)
+                             select p).First();
                 return price;
             }
         }
@@ -169,49 +177,50 @@ namespace PriceCompare.ViewModel
                 var joined = (from store in db.Stores
                               join p in db.Prices on new { ChainId = store.Chain.ChainNumber, store.StoreId } equals new { p.ChainId, p.StoreId }
                               where itemsCodes.Contains(p.Item.ItemCode)
-                              select new { StorId = store.StoreId, ChainName = store.Chain.Name,
-                                  StoreName = store.Name, Item = p.Item, Price = p.ItemPrice });
+                              select new
+                              {
+                                  StorId = store.StoreId,
+                                  ChainName = store.Chain.Name,
+                                  StoreName = store.Name,
+                                  Item = p.Item,
+                                  Price = p.ItemPrice
+                              });
 
 
-                //@@@@@@@@@@@@@@@@@@ change to contains all items!!
-                
-                  var result = (from s in db.Stores
-                                    // where itemsObj.Except(it.Items).Count() == 0 //all the items exist in store
-                                join p in db.Prices on new { ChainId = s.Chain.ChainNumber, s.StoreId } equals new { p.ChainId, p.StoreId }
-                                where itemsCodes.Contains(p.Item.ItemCode)
-                                group p by new { ChainName = s.Chain.Name, StoreName = s.Name }
-                                into grp
-                                select new Cart
-                                {
-                                    ChainName = grp.Key.ChainName,
-                                    StoreName = grp.Key.StoreName,
-                                  //  CartPrice = grp.Sum(p => p.ItemPrice), /////@@@@@@@@@@@@@@@@@@ multiple by quantity
-                                  
-                                    Items = grp.Select(p => new ItemQuantity
-                                    {
-                                        Quantity = 0,
-                                        Item = p.Item,
-                                        Price = p.ItemPrice
-                                    })
-                                    .ToList()
+                var result = (from s in db.Stores
+                                  // where itemsObj.Except(it.Items).Count() == 0 //all the items exist in store
+                              join p in db.Prices on new { ChainId = s.Chain.ChainNumber, s.StoreId } equals new { p.ChainId, p.StoreId }
+                              where itemsCodes.Contains(p.Item.ItemCode)
+                              group p by new { ChainName = s.Chain.Name, StoreName = s.Name }
+                              into grp
+                              select new Cart
+                              {
+                                  ChainName = grp.Key.ChainName,
+                                  StoreName = grp.Key.StoreName,
 
-                                }).ToList();
-                
+                                  Items = grp.Select(p => new ItemQuantity
+                                  {
+                                      Quantity = 0,
+                                      Item = p.Item,
+                                      Price = p.ItemPrice
+                                  })
+                                  .ToList()
 
+                              }).ToList();
+
+                //multiple by quatity in cart
                 foreach (var r in result)
                 {
                     foreach (var i in r.Items)
                     {
                         i.Quantity = (from q in items
-                                     where q.Item.ItemCode.Equals(i.Item.ItemCode)
-                                     select q.Quantity).First();
+                                      where q.Item.ItemCode.Equals(i.Item.ItemCode)
+                                      select q.Quantity).First();
                     }
                     r.CartPrice = r.Items.Sum(x => x.Price);
                 }
 
-
-
-              return result;
+                return result;
             }
         }
         /*---------------------------------*/
@@ -308,16 +317,7 @@ namespace PriceCompare.ViewModel
 
 
 
-        public IEnumerable<string> GetCities()
-        {
-            using (var db = new PricesContext())
-            {
-                var cities = from s in db.Stores
-                             select s.City;
-                return cities.ToList();
-            }
-        }
-        /*---------------------------------*/
+
 
 
         /*---------------------------------*/

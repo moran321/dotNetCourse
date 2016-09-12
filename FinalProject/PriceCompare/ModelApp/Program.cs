@@ -20,8 +20,9 @@ namespace PriceCompare.Model.App
           //  d.Run();
 
             
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<PricesContext>());
-         //   Database.SetInitializer(new DropCreateDatabaseAlways<PricesContext>());
+         //  Database.SetInitializer(new DropCreateDatabaseIfModelChanges<PricesContext>());
+            
+            Database.SetInitializer(new DropCreateDatabaseAlways<PricesContext>());
 
             DbBuilder manager = new DbBuilder();
             manager.InitializeDB();

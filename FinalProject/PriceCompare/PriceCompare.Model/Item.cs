@@ -6,7 +6,7 @@ namespace PriceCompare.Model
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class Item
+    public partial class Item : IEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Item()
@@ -14,10 +14,10 @@ namespace PriceCompare.Model
             Prices = new HashSet<Price>();
         }
 
-       // public int Id { get; set; }
+        public int Id { get; set; }
 
 
-        [Key]
+      //  [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long ItemCode { get; set; }
 
@@ -37,13 +37,13 @@ namespace PriceCompare.Model
 
         public override int GetHashCode()
         {        
-            return ItemCode.GetHashCode() ^ Name.GetHashCode();
+            return ItemCode.GetHashCode();
 
         }
         public override bool Equals(object obj)
         {
             var duplicate = (Item)obj;
-            return ItemCode.Equals(duplicate.ItemCode) && Name.Equals(duplicate.Name);
+            return ItemCode.Equals(duplicate.ItemCode);
         }
     }
 }

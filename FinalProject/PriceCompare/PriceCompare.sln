@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompare.ViewModel", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompare.Model", "PriceCompare.Model\PriceCompare.Model.csproj", "{8BB2EF71-CFC6-40C8-B45C-AC2B26810AEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelApp", "ModelApp\ModelApp.csproj", "{533FC721-6F51-49C0-BD3B-3CACF1BC980D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompare.Model.App", "ModelApp\PriceCompare.Model.App.csproj", "{533FC721-6F51-49C0-BD3B-3CACF1BC980D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

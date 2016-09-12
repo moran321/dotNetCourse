@@ -1,30 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using PriceCompare.Model;
 using System.Xml.Linq;
-using System.Data.SqlClient;
-using System.Collections;
+
 
 /*
-this class parses xml files and builds the database
+this class parses xml files 
+and uses "AddDataToDb" class to insert the elements to db
 */
 namespace PriceCompare.Model.App
 {
     class DbBuilder
     {
-        //working directory where the data found
-        string _dataPath = @"D:\prices\myChains";
+        string _dataPath = @"D:\prices\myOriginalChains"; //working directory where the data found
         ExtractArchiveFiles _archiveExtract;
         AddDataToDb _dbEditor;
         Dictionary<string, Chain> _chains;
-
-
+        HashSet<Item> _items;
         /*---------------------------------*/
 
         public DbBuilder()
@@ -32,14 +27,13 @@ namespace PriceCompare.Model.App
             _dbEditor = new AddDataToDb();
             _archiveExtract = new ExtractArchiveFiles();
             _chains = new Dictionary<string, Chain>();
+            _items = new HashSet<Item>();
         }
         /*---------------------------------*/
 
         public void InitializeDB()
         {
             DirectoryInfo[] dirInfo = new DirectoryInfo(_dataPath).GetDirectories();
-
-
             Parallel.ForEach(dirInfo, (dir) =>
             {
                 InitializeStoresData(dir.Name);
@@ -63,27 +57,18 @@ namespace PriceCompare.Model.App
             string zipPath = Path.Combine(_dataPath, dirName);
             string[] zipFiles = Directory.GetFiles(zipPath, "Stores*.*z*");
 
-            _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //@@@@@@@@@@@@@@@@ uncomment
+            // _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //@@@@@@@@@@@@@@@@ uncomment
 
             //read xml files
             string[] xmlStoresFiles = Directory.GetFiles(zipPath, "Stores*.xml");
 
-           var stores = new List<Store>();
+            var stores = new List<Store>();
             foreach (string xmlFile in xmlStoresFiles)
             {
-                //  var list = ParseStoresXml(xmlFile);
                 stores.AddRange(ParseStoresXml(xmlFile));
                 Console.WriteLine($"xmlStoresFiles parse");
-                // _dbEditor.AddStoresToDb(list); 
             }
-
-            // _dbEditor.AddChainsToDb(_chains.Values);
-            //  _dbEditor.AddStoresToDb(stores); //@@@@@@@@@@@@@@@@@@@@@@@@@
-            //    _dbEditor.InsertOrUpdate(_chains.Values);
-           
             _dbEditor.InsertOrUpdate(stores);
-          //  _chains.Clear();
-
         }
         /*---------------------------------*/
 
@@ -94,21 +79,22 @@ namespace PriceCompare.Model.App
             string zipPath = Path.Combine(_dataPath, dirName);
             string[] zipFiles = Directory.GetFiles(zipPath, "PriceFull*.*z*");
 
-            _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //@@@@@@@@@@@@@@@@ uncomment
+            // _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //@@@@@@@@@@@@@@@@ uncomment
 
             string[] xmlFiles = Directory.GetFiles(zipPath, "PriceFull*.xml");
 
 
             Parallel.ForEach(xmlFiles, (xmlFile) =>
             {
-                AddPricesXmlToDb(xmlFile);
+                var entries = ParsePricesXml(xmlFile);
+                _dbEditor.InsertOrUpdate(entries);
             });
+
 
             //foreach (string xmlFile in xmlFiles)
             //{
             //    AddPricesXmlToDb(xmlFile);
             //}
-
 
         }
         /*---------------------------------*/
@@ -123,21 +109,23 @@ namespace PriceCompare.Model.App
             var chainName = xml.SelectSingleNode("//ChainName | //CHAINNAME").InnerText;
             var chainId = xml.SelectSingleNode("//ChainId | //CHAINID").InnerText;
 
-
-
             XmlNodeList xnList = xml.SelectNodes("//Store | //STORE");
 
             var chain = new Chain()
             {
                 Name = chainName,
                 ChainNumber = Convert.ToInt64(chainId)
-                // ChainNumber = chainId
             };
 
-            if (!_chains.ContainsValue(chain))
-                _chains.Add(chain.Name, chain);
+            //if (!_chains.ContainsValue(chain))
+            //{
+            //    if (chain != null)
+            //    {
+            //        _chains.Add(chain.Name, chain); //@@@@@@@@@@@@@@@@@@@@@@@@@@ ???
+            //    }
+            //}
 
-            _dbEditor.InsertOrUpdate(new List<Chain>() { chain });
+           // _dbEditor.InsertOrUpdate(new List<Chain>() { chain });
 
             foreach (XmlNode xn in xnList)
             {
@@ -152,8 +140,8 @@ namespace PriceCompare.Model.App
                     Name = name,
                     Adress = address,
                     City = city,
-                    //Chain = chain,
-                    ChainId = chain.ChainNumber
+                    Chain = chain,
+                   // ChainId = chain.ChainNumber
                 };
                 storesList.Add(store);
             }
@@ -161,20 +149,61 @@ namespace PriceCompare.Model.App
         }
         /*---------------------------------*/
 
+        /*
+    private List<Store> ParseStoresXml(string xmlFile)
+    {
+        var storesList = new List<Store>();
 
 
-        private void AddPricesXmlToDb(string xmlFile)
+        XElement root = XElement.Load(xmlFile);
+        var chainName = root.ElementsCaseInsensitive("ChainName").First().Value;
+        var chainId = root.ElementsCaseInsensitive("ChainId").First().Value;
+
+
+
+        var chain = new Chain()
         {
+            Name = chainName,
+            ChainNumber = Convert.ToInt64(chainId)
+        };
 
-            XmlDocument xml = new XmlDocument();
-            xml.Load(xmlFile);
+        if (!_chains.ContainsValue(chain))
+            _chains.Add(chain.Name, chain);
 
-            var chain = xml.SelectSingleNode("//ChainId | //CHAINID |//Chainid").InnerText;
-            var store = xml.SelectSingleNode("//StoreId | //Storeid | //StoreID  | //STOREID").InnerText;
-            xml.RemoveAll();
+        _dbEditor.InsertOrUpdate(new List<Chain>() { chain }); //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ ?????
 
+        var stores = root.Elements("Store");
+        if (!stores.Any())
+        {
+             stores = root.Elements("STORE");
+        }
 
+        foreach (XElement xn in stores)
+        {
+            var storeId = root.ElementsCaseInsensitive("StoreId").First().Value;
+            var name = root.ElementsCaseInsensitive("StoreName").First().Value;
+            var address = root.ElementsCaseInsensitive("Address").First().Value;
+            var city = root.ElementsCaseInsensitive("City").First().Value;
+            var store = new Store()
+            {
+                StoreId = Convert.ToInt64(storeId),
+                Name = name,
+                Adress = address,
+                City = city,
+                //Chain = chain,
+                ChainId = chain.ChainNumber
+            };
+            storesList.Add(store);
+        }
+        return storesList;
+    }
+    /*---------------------------------*/
+
+        private List<Price> ParsePricesXml(string xmlFile)
+        {
             XElement root = XElement.Load(xmlFile);
+            var chain = root.ElementsCaseInsensitive("ChainId").First().Value;
+            var store = root.ElementsCaseInsensitive("StoreId").First().Value;
 
             var items = root.ElementsCaseInsensitive("item").ToList();
             if (!items.Any())
@@ -184,18 +213,20 @@ namespace PriceCompare.Model.App
             }
 
 
-
             var pricesList = new List<Price>();
             var itemsList = new List<Item>();
-
-
             object locker = new object();
 
-            Parallel.ForEach(items.Take(600), //@@@@@@@@@@@@@@@@@@@@@@@@ remove take
+            Parallel.ForEach(items.Take(2000), //@@@@@@@@@@@@@@@@@@@@@@@@ remove take
                () => { return new List<Price>(); },
               (el, loopState, local_prices) =>
               {
                   var itemCode = el.ElementsCaseInsensitive("ItemCode").First().Value;
+                  if (Convert.ToInt64(itemCode) < 10000000)
+                  {
+                      return local_prices;
+                  }
+
                   var itemName = el.ElementsCaseInsensitive("ItemName").First().Value;
                   var itemPrice = Convert.ToDouble(el.ElementsCaseInsensitive("ItemPrice").First().Value);
                   var itemType = el.ElementsCaseInsensitive("ItemType").First().Value;
@@ -242,17 +273,16 @@ namespace PriceCompare.Model.App
                }
                ));
 
-            //_dbEditor.AddPricesToDb(pricesList);
-            _dbEditor.InsertOrUpdate(pricesList);
+            return pricesList;
         }
         /*---------------------------------*/
-
-
-        /*---------------------------------*/
     }
+    /*---------------------------------------------------------------------------------------*/
+
 
     public static class XDocumentExtensions
     {
+        //extention method
         public static IEnumerable<XElement> ElementsCaseInsensitive(this XContainer source,
             XName name)
         {
@@ -260,6 +290,8 @@ namespace PriceCompare.Model.App
                 .Where(e => e.Name.Namespace == name.Namespace
                     && e.Name.LocalName.Equals(name.LocalName, StringComparison.OrdinalIgnoreCase));
         }
+        /*---------------------------------*/
     }
+    /*---------------------------------------------------------------------------------------*/
 
 }

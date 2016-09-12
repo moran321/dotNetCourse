@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:PriceCompare"
       mc:Ignorable="d" 
-      Title="SelectItemsPage" Width="700" Height="460">
+      Title="SelectItemsPage" Width="680" Height="460">
 
     <Grid>
         <Label x:Name="label1" Content="הוסף מוצרים לעגלה"  HorizontalContentAlignment="Center"  VerticalAlignment="Top" Background="#FFA4B9D0" FontSize="18.667" FontWeight="Bold"/>
@@ -13,7 +13,7 @@
             <DockPanel.Background>
                 <SolidColorBrush Color="#FFA0A0A0"/>
             </DockPanel.Background>
-            <DockPanel x:Name="left_panel" Width="350" Margin="0,0,0,10">
+            <DockPanel x:Name="left_panel" Width="342" Margin="0,0,0,10">
                 <DockPanel.Background>
                     <SolidColorBrush Color="#FFA8A8AF"/>
                 </DockPanel.Background>
@@ -24,7 +24,7 @@
                     </StackPanel>
                     <StackPanel x:Name="quantity_stackPanel">
                         <Label x:Name="quantity_label" Content="כמות" FontSize="13.333" Foreground="#FFFBF8F8"/>
-                        <TextBox x:Name="quantity_textBox" Height="34" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" BorderBrush="#FF010208" FontSize="16" Width="61"/>
+                        <TextBox x:Name="quantity_textBox" Height="34" TextWrapping="Wrap" Text="1" VerticalAlignment="Top" BorderBrush="#FF010208" FontSize="16" Width="79"/>
                     </StackPanel>
                 </StackPanel>
                 <ListBox x:Name="items_listBox" Height="267" BorderBrush="#FF04123E" HorizontalContentAlignment="Right" SelectionChanged="items_listBox_SelectionChanged" DockPanel.Dock="Top" RenderTransformOrigin="0.5,0.5">
@@ -40,12 +40,12 @@
                     </Button.Background>
                 </Button>
             </DockPanel>
-            <DockPanel x:Name="right_panel" Width="350" Margin="0,0,0,10">
+            <DockPanel x:Name="right_panel" Width="340" Margin="0,0,0,10">
                 <DockPanel.Background>
                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
                 </DockPanel.Background>
-                <Label x:Name="label" Content="העגלה שלי" Background="#FFA8A8AF" Foreground="#FF0E0101" FontSize="16" DockPanel.Dock="Top" BorderBrush="Black"/>
-                <ListBox x:Name="cart_listBox" Height="298" HorizontalContentAlignment="Right" BorderBrush="#FF03050C" DockPanel.Dock="Top">
+                <Label x:Name="label" Content="העגלה שלי" HorizontalContentAlignment="Right" Background="#FFA8A8AF" Foreground="#FF0E0101" FontSize="16" DockPanel.Dock="Top" BorderBrush="Black" Margin="0,0,10,0"/>
+                <ListBox x:Name="cart_listBox" Height="298" HorizontalContentAlignment="Right" BorderBrush="#FF03050C" DockPanel.Dock="Top" Margin="0,0,10,0">
                     <ListBox.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF93A8BF" Offset="0"/>
@@ -54,7 +54,7 @@
                     </ListBox.Background>
                 </ListBox>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
-                    <Button x:Name="remove_button" Content="הסר" HorizontalAlignment="Left" Click="remove_button_Click" Width="94" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" Foreground="#FF720000" FontWeight="Bold" Height="54">
+                    <Button x:Name="remove_button" Content="הסר" HorizontalAlignment="Left" Click="remove_button_Click" Width="94" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" Foreground="#FF720000" FontWeight="Bold" Height="42">
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="#FFA4B9D0" Offset="0"/>
@@ -63,7 +63,7 @@
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="continue_button" Content="המשך"  Click="continue_button_Click" Width="237" FontWeight="Bold" FontSize="16" BorderBrush="{x:Null}" Height="56" >
+                    <Button x:Name="continue_button" Content="המשך"  Click="continue_button_Click" Width="237" FontWeight="Bold" FontSize="16" BorderBrush="{x:Null}" Height="44" >
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="#FFA4B9D0" Offset="0"/>

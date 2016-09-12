@@ -6,12 +6,20 @@
       xmlns:local="clr-namespace:PriceCompare"
       mc:Ignorable="d" 
       
-       Title="Results Page" Width="700" Height="500">
-    <Grid Background="#FFA8A8AF">
+       Title="Results Page" Width="700" Height="479">
+    <Grid Background="#FFA8A8AF" Margin="0,0,0,10">
         <Label x:Name="label" Content="תוצאות ההשוואה" VerticalAlignment="Top" FontSize="21.333" BorderBrush="Black"  HorizontalContentAlignment="Center"  Background="#FFA4B9D0" FontWeight="Bold"/>
-        <DockPanel HorizontalAlignment="Left" Height="337" Margin="16,66,0,0" VerticalAlignment="Top" Width="364" >
+        <DockPanel HorizontalAlignment="Left" Height="382" Margin="16,66,0,0" VerticalAlignment="Top" Width="364" >
             <Label x:Name="leftlabel" Content="מחירים ברשתות השונות" HorizontalContentAlignment="Center"  FontSize="13.333"  DockPanel.Dock="Top"/>
-            <ListBox x:Name="suppliers_listBox" BorderBrush="#FF03060A" DockPanel.Dock="Top" Height="308" HorizontalContentAlignment="Right" SelectionChanged="suppliers_listBox_SelectionChanged">
+            <ListBox x:Name="suppliers_listBox" BorderBrush="#FF03060A" DockPanel.Dock="Top" Height="98" HorizontalContentAlignment="Right" SelectionChanged="suppliers_listBox_SelectionChanged">
+                <ListBox.Background>
+                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                        <GradientStop Color="#FFA3B8CF" Offset="0"/>
+                        <GradientStop Color="White" Offset="1"/>
+                    </LinearGradientBrush>
+                </ListBox.Background>
+            </ListBox>
+            <ListBox x:Name="stores_listBox" BorderBrush="#FF03060A" DockPanel.Dock="Top" Height="222" HorizontalContentAlignment="Right" SelectionChanged="stores_listBox_SelectionChanged">
                 <ListBox.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="#FFA3B8CF" Offset="0"/>
@@ -37,6 +45,16 @@
                 </ListBox.BorderBrush>
             </ListBox>
         </StackPanel>
+        <Button x:Name="button" Content="Save to file" HorizontalAlignment="Left" Margin="572,390,0,0" VerticalAlignment="Top" Width="89" Height="28" Click="button_Click">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA4B9D0" Offset="0"/>
+                    <GradientStop Color="#FF767C81" Offset="1"/>
+                    <GradientStop Color="#FFB5CAE4" Offset="0.487"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Label x:Name="label1" Content="" HorizontalAlignment="Left" Margin="523,390,0,0" VerticalAlignment="Top" FontSize="9.333" RenderTransformOrigin="-5.3,-0.905" Width="44" Height="28" Foreground="#FFB80000"/>
     </Grid>
 
 </Page>

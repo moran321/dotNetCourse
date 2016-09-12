@@ -6,7 +6,7 @@ namespace PriceCompare.Model
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    public partial class Store
+    public partial class Store : IEntity
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Store()
@@ -15,16 +15,16 @@ namespace PriceCompare.Model
         }
 
 
-        //  public int Id { get; set; }
+          public int Id { get; set; }
 
-        [Key]
-        [Column(Order = 0)]
+      //  [Key]
+     //   [Column(Order = 0)]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public long StoreId { get; set; }
 
-        [Key]
-        [Column(Order = 1)]
-        public long ChainId { get; set; }
+     //   [Key]
+      //  [Column(Order = 1)]
+        public int ChainId { get; set; }
 
         public string Name { get; set; }
 

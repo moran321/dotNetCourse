@@ -2,18 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace PriceCompare.View
 {
@@ -86,7 +78,7 @@ namespace PriceCompare.View
                             where en.ItemName.Equals(items_listBox.SelectedItem)
                             select en).First();
                 var item = new SelectedItem() { item = entry, Quantity = Convert.ToInt32(quantity_textBox.Text) };
-                //var item = new SelectedItem() { item = _itemsList.ElementAt(items_listBox.SelectedIndex), Quantity = Convert.ToInt32(quantity_textBox.Text) };
+
                 _selectedItems.Add(item);
             }
         }

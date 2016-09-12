@@ -1,14 +1,10 @@
 namespace PriceCompare.Model
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
 
-    public partial class Price
+    using System.ComponentModel.DataAnnotations;
+
+    public partial class Price : IEntity
     {
-        public int PriceId { get; set; }
 
         public long StoreId { get; set; }
 
@@ -25,8 +21,7 @@ namespace PriceCompare.Model
 
         public virtual Item Item { get; set; }
 
-       // [ForeignKey("StoreId")]
-      //  public virtual Store Store { get; set; } //@@
+        public int Id { get; set; }
 
 
     }
