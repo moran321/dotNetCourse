@@ -1,7 +1,6 @@
-﻿using System;
+﻿
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using PriceCompare.Model;
 
 
@@ -70,21 +69,6 @@ namespace PriceCompare.ViewModel
             var carts = from r in all_carts
                         orderby r.CartPrice ascending
                         select r;
-
-
-            //var cheapest = from c in carts
-            //             group c by c.ChainName into grp
-            //             select grp.First();
-
-
-            //var result = from r in cheapest
-            //             select new ViewCart
-            //            {
-            //                ChainName = r.ChainName,
-            //                StoreName = r.StoreName,
-            //                CartPrice = r.CartPrice,
-            //                Items = Convert(r.Items)
-            //            };
 
             var allitemsstores = from c in carts
                                  where c.Items.Count == Cart.Items.Count

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompare.View", "PriceCompare\PriceCompare.View.csproj", "{DD02F486-50EA-4EEC-8305-11A76D3F0843}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompare.ViewModel", "PriceCompareServer\PriceCompare.ViewModel.csproj", "{4C335289-FBE0-459A-8A66-62C90D495F52}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompare.Model", "PriceCompare.Model\PriceCompare.Model.csproj", "{8BB2EF71-CFC6-40C8-B45C-AC2B26810AEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompare.Model.App", "ModelApp\PriceCompare.Model.App.csproj", "{533FC721-6F51-49C0-BD3B-3CACF1BC980D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompare.Model.App", "PriceCompare.Model.App\PriceCompare.Model.App.csproj", "{533FC721-6F51-49C0-BD3B-3CACF1BC980D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompare.View", "PriceCompare.View\PriceCompare.View.csproj", "{DD02F486-50EA-4EEC-8305-11A76D3F0843}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PriceCompare.ViewModel", "PriceCompare.ViewModel\PriceCompare.ViewModel.csproj", "{4C335289-FBE0-459A-8A66-62C90D495F52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,14 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{DD02F486-50EA-4EEC-8305-11A76D3F0843}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD02F486-50EA-4EEC-8305-11A76D3F0843}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD02F486-50EA-4EEC-8305-11A76D3F0843}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD02F486-50EA-4EEC-8305-11A76D3F0843}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4C335289-FBE0-459A-8A66-62C90D495F52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4C335289-FBE0-459A-8A66-62C90D495F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4C335289-FBE0-459A-8A66-62C90D495F52}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4C335289-FBE0-459A-8A66-62C90D495F52}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8BB2EF71-CFC6-40C8-B45C-AC2B26810AEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8BB2EF71-CFC6-40C8-B45C-AC2B26810AEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BB2EF71-CFC6-40C8-B45C-AC2B26810AEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +25,14 @@ Global
 		{533FC721-6F51-49C0-BD3B-3CACF1BC980D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{533FC721-6F51-49C0-BD3B-3CACF1BC980D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{533FC721-6F51-49C0-BD3B-3CACF1BC980D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD02F486-50EA-4EEC-8305-11A76D3F0843}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD02F486-50EA-4EEC-8305-11A76D3F0843}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD02F486-50EA-4EEC-8305-11A76D3F0843}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD02F486-50EA-4EEC-8305-11A76D3F0843}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C335289-FBE0-459A-8A66-62C90D495F52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C335289-FBE0-459A-8A66-62C90D495F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C335289-FBE0-459A-8A66-62C90D495F52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C335289-FBE0-459A-8A66-62C90D495F52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

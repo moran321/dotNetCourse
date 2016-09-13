@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PriceCompare.Model
 {
-
-
-
 
     //context class
     public class PricesContext : DbContext
@@ -19,7 +13,7 @@ namespace PriceCompare.Model
         public DbSet<Price> Prices { get; set; }
 
 
-        public PricesContext() : base("PricesDB")
+        public PricesContext() : base("PricesDB") 
         {
 
         }
@@ -27,14 +21,11 @@ namespace PriceCompare.Model
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
 
-
             //one-to-many 
             modelBuilder.Entity<Store>()
                         .HasRequired(s => s.Chain)
                         .WithMany(s => s.Stores)
                         .HasForeignKey(s => s.ChainId);
-            // .HasForeignKey(e => new { e.StoreId, e.ChainId });
-
 
             //one-to-many 
             modelBuilder.Entity<Price>()
@@ -47,6 +38,7 @@ namespace PriceCompare.Model
 
 
         // RecreateDatabaseIfModelChanges 
+        /*
         public class ContextSeedInitializer : DropCreateDatabaseIfModelChanges<PricesContext> //CreateDatabaseIfNotExists<PricesContext>
         {
             protected override void Seed(PricesContext context)

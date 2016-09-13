@@ -57,7 +57,7 @@ namespace PriceCompare.Model.App
             string zipPath = Path.Combine(_dataPath, dirName);
             string[] zipFiles = Directory.GetFiles(zipPath, "Stores*.*z*");
 
-            _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //@@@@@@@@@@@@@@@@ uncomment
+            // _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //@@@@@@@@@@@@@@@@ uncomment
 
             //read xml files
             string[] xmlStoresFiles = Directory.GetFiles(zipPath, "Stores*.xml");
@@ -79,17 +79,17 @@ namespace PriceCompare.Model.App
             string zipPath = Path.Combine(_dataPath, dirName);
             string[] zipFiles = Directory.GetFiles(zipPath, "PriceFull*.*z*");
 
-            _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //@@@@@@@@@@@@@@@@ uncomment
+            // _archiveExtract.ExtractCompressedFiles(zipPath, zipFiles); //@@@@@@@@@@@@@@@@ uncomment
 
             string[] xmlFiles = Directory.GetFiles(zipPath, "PriceFull*.xml");
 
 
             Parallel.ForEach(xmlFiles, (xmlFile) =>
             {
-                var entries = AddPricesXmlToDb(xmlFile);
-                _dbEditor.InsertOrUpdate(entries); 
+                var entries = ParsePricesXml(xmlFile);
+                _dbEditor.InsertOrUpdate(entries);
             });
-           
+
 
             //foreach (string xmlFile in xmlFiles)
             //{
@@ -117,14 +117,15 @@ namespace PriceCompare.Model.App
                 ChainNumber = Convert.ToInt64(chainId)
             };
 
-            if (!_chains.ContainsValue(chain))
-                _chains.Add(chain.Name, chain);
-
-            _dbEditor.InsertOrUpdate(new List<Chain>() { chain });
+            //if (!_chains.ContainsValue(chain))
+            //{
+            //        _chains.Add(chain.Name, chain); 
+            //}
+           // _dbEditor.InsertOrUpdate(new List<Chain>() { chain });
 
             foreach (XmlNode xn in xnList)
             {
-                var storeId = xn.SelectSingleNode("StoreId | StoreID | Storeid | STOREID").InnerText; //@@@@@@@@@@@@@
+                var storeId = xn.SelectSingleNode("StoreId | StoreID | Storeid | STOREID").InnerText; 
                 var name = xn.SelectSingleNode("StoreName | STORENAME").InnerText;
                 var address = xn.SelectSingleNode("Address | ADDRESS").InnerText;
                 var city = xn.SelectSingleNode("City | CITY").InnerText;
@@ -135,8 +136,8 @@ namespace PriceCompare.Model.App
                     Name = name,
                     Adress = address,
                     City = city,
-                    //Chain = chain,
-                    ChainId = chain.ChainNumber
+                    Chain = chain,
+                   // ChainId = chain.ChainNumber
                 };
                 storesList.Add(store);
             }
@@ -145,8 +146,7 @@ namespace PriceCompare.Model.App
         /*---------------------------------*/
 
 
-
-        private List<Price> AddPricesXmlToDb(string xmlFile)
+        private List<Price> ParsePricesXml(string xmlFile)
         {
             XElement root = XElement.Load(xmlFile);
             var chain = root.ElementsCaseInsensitive("ChainId").First().Value;
@@ -164,7 +164,7 @@ namespace PriceCompare.Model.App
             var itemsList = new List<Item>();
             object locker = new object();
 
-            Parallel.ForEach(items.Take(800), //@@@@@@@@@@@@@@@@@@@@@@@@ remove take
+            Parallel.ForEach(items, 
                () => { return new List<Price>(); },
               (el, loopState, local_prices) =>
               {
@@ -173,7 +173,7 @@ namespace PriceCompare.Model.App
                   {
                       return local_prices;
                   }
-                      
+
                   var itemName = el.ElementsCaseInsensitive("ItemName").First().Value;
                   var itemPrice = Convert.ToDouble(el.ElementsCaseInsensitive("ItemPrice").First().Value);
                   var itemType = el.ElementsCaseInsensitive("ItemType").First().Value;
@@ -226,7 +226,7 @@ namespace PriceCompare.Model.App
     }
     /*---------------------------------------------------------------------------------------*/
 
-   
+
     public static class XDocumentExtensions
     {
         //extention method
@@ -239,6 +239,6 @@ namespace PriceCompare.Model.App
         }
         /*---------------------------------*/
     }
-/*---------------------------------------------------------------------------------------*/
+    /*---------------------------------------------------------------------------------------*/
 
 }
