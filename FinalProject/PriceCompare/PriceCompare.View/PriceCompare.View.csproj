@@ -169,10 +169,34 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PriceCompareServer\PriceCompare.ViewModel.csproj">
+    <ProjectReference Include="..\PriceCompare.ViewModel\PriceCompare.ViewModel.csproj">
       <Project>{4c335289-fbe0-459a-8a66-62c90d495f52}</Project>
       <Name>PriceCompare.ViewModel</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="cart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Carts_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="save_icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="supermarket.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="shopping-cart-with-groceries.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Image2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

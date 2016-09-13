@@ -9,7 +9,7 @@
        Title="Results Page" Width="700" Height="479">
     <Grid Background="#FFA8A8AF" Margin="0,0,0,10">
         <Label x:Name="label" Content="תוצאות ההשוואה" VerticalAlignment="Top" FontSize="21.333" BorderBrush="Black"  HorizontalContentAlignment="Center"  Background="#FFA4B9D0" FontWeight="Bold"/>
-        <DockPanel HorizontalAlignment="Left" Height="382" Margin="16,66,0,0" VerticalAlignment="Top" Width="364" >
+        <DockPanel HorizontalAlignment="Left" Height="382" Margin="10,43,0,0" VerticalAlignment="Top" Width="364" >
             <Label x:Name="leftlabel" Content="מחירים ברשתות השונות" HorizontalContentAlignment="Center"  FontSize="13.333"  DockPanel.Dock="Top"/>
             <ListBox x:Name="suppliers_listBox" BorderBrush="#FF03060A" DockPanel.Dock="Top" Height="98" HorizontalContentAlignment="Right" SelectionChanged="suppliers_listBox_SelectionChanged">
                 <ListBox.Background>
@@ -45,7 +45,7 @@
                 </ListBox.BorderBrush>
             </ListBox>
         </StackPanel>
-        <Button x:Name="button" Content="Save to file" HorizontalAlignment="Left" Margin="572,390,0,0" VerticalAlignment="Top" Width="89" Height="28" Click="button_Click">
+        <Button x:Name="button" Content="שמור מוצרים לקובץ" HorizontalAlignment="Left" Margin="467,397,0,0" VerticalAlignment="Top" Width="138" Height="28" Click="button_Click">
             <Button.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FFA4B9D0" Offset="0"/>
@@ -54,7 +54,8 @@
                 </LinearGradientBrush>
             </Button.Background>
         </Button>
-        <Label x:Name="label1" Content="" HorizontalAlignment="Left" Margin="523,390,0,0" VerticalAlignment="Top" FontSize="9.333" RenderTransformOrigin="-5.3,-0.905" Width="44" Height="28" Foreground="#FFB80000"/>
+        <Label x:Name="label1" Content="" HorizontalAlignment="Left" Margin="515,369,0,0" VerticalAlignment="Top" FontSize="9.333" RenderTransformOrigin="-5.3,-0.905" Width="44" Height="28" Foreground="#FFB80000"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="100" Margin="0,38,0,0" VerticalAlignment="Top" Width="100" Source="save_icon.png"/>
     </Grid>
 
 </Page>

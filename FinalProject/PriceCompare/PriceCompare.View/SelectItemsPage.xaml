@@ -19,7 +19,7 @@
                 </DockPanel.Background>
                 <StackPanel x:Name="upper_panel" Orientation="Horizontal" DockPanel.Dock="Top">
                     <StackPanel x:Name="select_stcackPanel" Width="262">
-                        <Label x:Name="textbox_label" Content="מוצרים" FontSize="13" Foreground="#FFFBF8F8"/>
+                        <Label x:Name="textbox_label" Content="חפש מוצר" FontSize="13" Foreground="#FFFBF8F8"/>
                         <TextBox x:Name="item_textBox" Text="בחר מוצר"  BorderBrush="#FF04123E" TextChanged="item_textBox_TextChanged" GotFocus="item_textBox_GotFocus" Height="35" FontSize="13.333" />
                     </StackPanel>
                     <StackPanel x:Name="quantity_stackPanel">
@@ -44,7 +44,7 @@
                 <DockPanel.Background>
                     <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.ControlDarkColorKey}}"/>
                 </DockPanel.Background>
-                <Label x:Name="label" Content="העגלה שלי" HorizontalContentAlignment="Right" Background="#FFA8A8AF" Foreground="#FF0E0101" FontSize="16" DockPanel.Dock="Top" BorderBrush="Black" Margin="0,0,10,0"/>
+                <Label x:Name="label" Content="העגלה שלי" HorizontalContentAlignment="Center" Background="{x:Null}" Foreground="#FF0E0101" FontSize="16" DockPanel.Dock="Top" BorderBrush="Black" Margin="52,0,10,0"/>
                 <ListBox x:Name="cart_listBox" Height="298" HorizontalContentAlignment="Right" BorderBrush="#FF03050C" DockPanel.Dock="Top" Margin="0,0,10,0">
                     <ListBox.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -54,7 +54,7 @@
                     </ListBox.Background>
                 </ListBox>
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
-                    <Button x:Name="remove_button" Content="הסר" HorizontalAlignment="Left" Click="remove_button_Click" Width="94" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" Foreground="#FF720000" FontWeight="Bold" Height="42">
+                    <Button x:Name="remove_button" Content="הסר" HorizontalAlignment="Left" Click="remove_button_Click" Width="94" HorizontalContentAlignment="Center" BorderBrush="{x:Null}" Foreground="#FF720000" FontWeight="Bold" Height="41">
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="#FFA4B9D0" Offset="0"/>
@@ -63,7 +63,7 @@
                             </LinearGradientBrush>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="continue_button" Content="המשך"  Click="continue_button_Click" Width="237" FontWeight="Bold" FontSize="16" BorderBrush="{x:Null}" Height="44" >
+                    <Button x:Name="continue_button" Content="המשך"  Click="continue_button_Click" Width="237" FontWeight="Bold" FontSize="16" BorderBrush="{x:Null}" Height="45" >
                         <Button.Background>
                             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                 <GradientStop Color="#FFA4B9D0" Offset="0"/>
@@ -76,5 +76,7 @@
             </DockPanel>
 
         </DockPanel>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="80" Margin="585,20,0,0" VerticalAlignment="Top" Width="81" Source="Carts_icon.png"/>
+        <Image x:Name="image1" HorizontalAlignment="Left" Height="38" Margin="221,68,0,0" VerticalAlignment="Top" Width="38" Source="search.png"/>
     </Grid>
 </Page>

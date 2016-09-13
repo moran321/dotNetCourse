@@ -63,7 +63,6 @@ namespace PriceCompare.Model.App
             {
                 File.Delete(xmlFile);
             }
-            //////
 
             Parallel.ForEach(zipFiles, (zip) =>
             {
@@ -75,17 +74,7 @@ namespace PriceCompare.Model.App
                 ZipFile.ExtractToDirectory(zip, zipPath);
 
              });
-        
-            //foreach (string zip in zipFiles)
-            //{
-            //    var pathtofile = Path.Combine( zipPath,Path.GetFileNameWithoutExtension(zip)+".xml");
-            //    if (File.Exists(pathtofile))
-            //    {
-            //        File.Delete(pathtofile);
-            //    }
-            //    ZipFile.ExtractToDirectory(zip, zipPath);
-            //}
-
+       
         }
         /*---------------------------------*/
 

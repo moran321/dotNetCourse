@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PriceCompare.ViewModel
+namespace PriceCompare.Model
 {
-    public enum SearchType
+   public class Item_Price
     {
-        SpecificStore, GlobalItems, LocalStores
+        public Item Item { set; get; }
+        public Price Price { set; get; }
     }
 }

@@ -7,8 +7,8 @@
       mc:Ignorable="d" 
       Title="SelectGlobalItems"  Width="700" Height="500">
 
-    <Grid Background="#FFA8A8AF">
-        <DockPanel  Width="318" Margin="99,137,83,67">
+    <Grid Background="#FFA8A8AF" Margin="0,0,0,26">
+        <DockPanel Margin="138,119,300,206">
             <Button x:Name="specificStore_button" Content="בחירת מוצרים בחנות מסויימת" DockPanel.Dock="Top" Height="50" FontSize="16" Click="specificStore_button_Click">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -18,7 +18,7 @@
                     </LinearGradientBrush>
                 </Button.Background>
             </Button>
-            <Button x:Name="allStores_button" Content="בחירת מוצרים מכל החנויות" DockPanel.Dock="Bottom" Height="50" FontSize="16" Click="allStores_button_Click">
+            <Button x:Name="allStores_button" Content="בחירת מוצרים מכל החנויות" DockPanel.Dock="Bottom" Height="50" FontSize="16" Click="allStores_button_Click" IsEnabled="False">
                 <Button.Background>
                     <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                         <GradientStop Color="#FFA4B9D0" Offset="0"/>
@@ -29,8 +29,19 @@
             </Button>
         </DockPanel>
         <StackPanel Height="49" VerticalAlignment="Top" Background="#FFA4B9D0">
-            <Label x:Name="label" Content="בחר סוג חיפוש" Height="48" HorizontalContentAlignment="Center" FontSize="21" FontWeight="Bold" />
+            <Label x:Name="label" Content="השוואת סל קניות" Height="48" HorizontalContentAlignment="Center" FontSize="21" FontWeight="Bold" />
         </StackPanel>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="244" Margin="400,119,0,0" VerticalAlignment="Top" Width="244" Source="shopping-cart-with-groceries.png" Opacity="0.5"/>
+        <Button x:Name="localStores_button" Content="השאוות סניפים לפי מיקום" FontSize="16" Margin="138,268,300,156" IsEnabled="False">
+            <Button.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA4B9D0" Offset="0"/>
+                    <GradientStop Color="#FF767C81" Offset="1"/>
+                    <GradientStop Color="#FFB5CAE4" Offset="0.487"/>
+                </LinearGradientBrush>
+            </Button.Background>
+        </Button>
+        <Label x:Name="label1" Content="בנה עגלת קניות, השווה מחירים ברשתות השונות וחסוך כסף" HorizontalAlignment="Left" Margin="190,49,0,0" VerticalAlignment="Top" Width="336"/>
 
     </Grid>
 </Page>

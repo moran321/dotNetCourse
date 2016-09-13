@@ -1,5 +1,5 @@
 ﻿
-
+//instance of this class create when the user choose item from list
 namespace PriceCompare.ViewModel
 {
     public class SelectedItem
@@ -15,7 +15,6 @@ namespace PriceCompare.ViewModel
 
         public override string ToString()
         { 
-            
             return $"{item.ItemName} {Price}0₪";
         }
     }
