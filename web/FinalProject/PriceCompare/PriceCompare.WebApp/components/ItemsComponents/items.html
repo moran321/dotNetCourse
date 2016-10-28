@@ -1,0 +1,48 @@
+﻿<!-- CartCtrl -->
+
+<div class="wrapper container">
+    <div class="items-div row">
+
+        <button ng-disabled="$ctrl.isCartEmpty()" class="col-md-3 text-center"><b>השווה סל קניות</b></button>
+
+        <div dir="rtl" class="input col-md-8">
+            <input type="text" ng-model="customSelected" placeholder="בחר מוצר"
+                   uib-typeahead="item as item.Name for item in $ctrl.getCart().store.items | filter:{Name:$viewValue}"
+                   typeahead-popup-template-url="customPopupTemplate.html" class="form-control" typeahead-show-hint="true"
+                   typeahead-min-length="0">
+
+            <script type="text/ng-template" id="customPopupTemplate.html">
+                <div class="popup-wrapper pre-scrollable">
+                    <ma-item-entry ng-repeat="match in matches track by $index" item="match.model" button-text="הוסף" func="$ctrl.addItem()">
+
+                    </ma-item-entry>
+                </div>
+            </script>
+        </div>
+
+        <div class="text-style col-md-1 text-right">
+            <span>חפש</span>
+        </div>
+    </div>
+
+    <div>
+        <div class="items-list-header row">
+            <p class="col-md-3"></p>
+            <p class="col-md-3 text-center"><b>כמות להוספה</b></p>
+            <p class="col-md-3 text-center"><b>יח\משקל</b></p>
+            <p class="col-md-3 text-right" style="padding-right:50px;"><b>שם המוצר</b> </p>
+
+        </div>
+    </div>
+
+    <div class="items-list-div" id="items-list">
+        <div ng-show="$ctrl.isCartEmpty()">
+            <h1>הסל שלך ריק, הוסף מוצרים לסל</h1>
+        </div>
+        <div ng-repeat="item in $ctrl.cartService.cart.itemsInCart track by $index">
+            <ma-item-entry item="item" buttonText="הסר" func="$ctrl.removeItem"> </ma-item-entry>
+        </div>
+    </div>
+
+
+</div>

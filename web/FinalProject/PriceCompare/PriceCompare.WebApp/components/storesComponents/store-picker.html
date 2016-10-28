@@ -1,0 +1,14 @@
+﻿<!-- ChainsCtrl -->
+<div dir="rtl" class="container-fluid">
+    <div class="text">
+        <span>בחר חנות {{$ctrl.number}} </span>
+    </div>
+    <select class="select form-control" 
+            ng-options="chain as chain.name for chain in $ctrl.chains track by chain.name" ng-model="$ctrl.selectedChain">
+    </select>
+
+    <select class="select form-control" 
+            ng-options="store as store.address for store in $ctrl.selectedChain.stores" ng-model="$ctrl.selectedStore"
+            ng-change="$ctrl.onStoreChanged($ctrl.number)">
+    </select>
+</div>

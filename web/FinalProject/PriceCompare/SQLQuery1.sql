@@ -1,0 +1,1 @@
+﻿select * from dbo.Items order by ItemCode 
