@@ -11,10 +11,10 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
-using PriceCompare.WebAPI.Areas.HelpPage.ModelDescriptions;
-using PriceCompare.WebAPI.Areas.HelpPage.Models;
+using PriceCompare.WebApi.Areas.HelpPage.ModelDescriptions;
+using PriceCompare.WebApi.Areas.HelpPage.Models;
 
-namespace PriceCompare.WebAPI.Areas.HelpPage
+namespace PriceCompare.WebApi.Areas.HelpPage
 {
     public static class HelpPageConfigurationExtensions
     {

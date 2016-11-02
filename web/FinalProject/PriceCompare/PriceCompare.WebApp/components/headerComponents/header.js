@@ -4,10 +4,4 @@ var HeaderCtrl = (function () {
     }
     return HeaderCtrl;
 }());
-app.component("maHeader", {
-    templateUrl: "components/headerComponents/header.html",
-    //bindings: {
-    //},
-    controller: HeaderCtrl
-});
 //# sourceMappingURL=header.js.map

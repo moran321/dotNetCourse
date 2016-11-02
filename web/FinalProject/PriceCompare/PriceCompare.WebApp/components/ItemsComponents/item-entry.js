@@ -4,13 +4,12 @@ var ItemEntryCtrl = (function () {
     }
     return ItemEntryCtrl;
 }());
-app.component("maItemEntry", {
-    templateUrl: "components/itemsComponents/item-entry.html",
-    bindings: {
-        item: "=",
-        buttonText: "@",
-        func: "&"
-    },
-    controller: ItemEntryCtrl
-});
-//# sourceMappingURL=item-entry.js.map
+//app.component("maItemEntry", {
+//    templateUrl: "components/itemsComponents/item-entry.html",
+//    bindings: {
+//        item: "=",
+//        buttonText: "@",
+//        func: "&"
+//    },
+//    controller: ItemEntryCtrl
+//});

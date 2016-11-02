@@ -1,20 +1,25 @@
 ﻿<!-- CartCtrl -->
-
-<div class="wrapper container">
+<!-- ItemsCtrl -->
+<div class="wrapper container centering">
     <div class="items-div row">
 
-        <button ng-disabled="$ctrl.isCartEmpty()" class="col-md-3 text-center"><b>השווה סל קניות</b></button>
+        <a href="{{$ctrl.isCartEmpty() ? '#/' : '#results'}}" ng-class="$ctrl.isCartEmpty() ? 'disabled' : 'enabled'">
+            <button ng-disabled="$ctrl.isCartEmpty()" class="col-md-3 text-center button-theme"><b>השווה סל קניות</b></button>
+        </a>
 
-        <div dir="rtl" class="input col-md-8">
-            <input type="text" ng-model="customSelected" placeholder="בחר מוצר"
-                   uib-typeahead="item as item.Name for item in $ctrl.getCart().store.items | filter:{Name:$viewValue}"
-                   typeahead-popup-template-url="customPopupTemplate.html" class="form-control" typeahead-show-hint="true"
+        <div class="col-md-8">
+            <input type="text" ng-model="$ctrl.selectedText" placeholder="בחר מוצר"
+                   uib-typeahead="item as item.Name for item in $ctrl.getStoreItems()"
+                   typeahead-popup-template-url="customPopupTemplate.html" class="input form-control" typeahead-show-hint="true"
+                   typeahead-on-select="$ctrl.addItem($item, $model, $label, $event)"
                    typeahead-min-length="0">
 
             <script type="text/ng-template" id="customPopupTemplate.html">
-                <div class="popup-wrapper pre-scrollable">
-                    <ma-item-entry ng-repeat="match in matches track by $index" item="match.model" button-text="הוסף" func="$ctrl.addItem()">
-
+                <div class="popup-wrapper pre-scrollable" ng-click="$event.stopPropagation()">
+                    <ma-item-entry ng-repeat="match in matches track by $index"
+                                   item="match.model"
+                                   button-text="הוסף"
+                                   on-button-click="selectMatch($index)">
                     </ma-item-entry>
                 </div>
             </script>
@@ -39,8 +44,8 @@
         <div ng-show="$ctrl.isCartEmpty()">
             <h1>הסל שלך ריק, הוסף מוצרים לסל</h1>
         </div>
-        <div ng-repeat="item in $ctrl.cartService.cart.itemsInCart track by $index">
-            <ma-item-entry item="item" buttonText="הסר" func="$ctrl.removeItem"> </ma-item-entry>
+        <div ng-repeat="item in $ctrl.getItemsInCart()">
+            <ma-item-entry item="item" button-text="הסר" on-button-click="$ctrl.removeItem(item)"> </ma-item-entry>
         </div>
     </div>
 

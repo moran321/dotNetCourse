@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 using System.Web.Http.Description;
-using PriceCompare.WebAPI.Areas.HelpPage.ModelDescriptions;
+using PriceCompare.WebApi.Areas.HelpPage.ModelDescriptions;
 
-namespace PriceCompare.WebAPI.Areas.HelpPage.Models
+namespace PriceCompare.WebApi.Areas.HelpPage.Models
 {
     /// <summary>
     /// The model that represents an API displayed on the help page.

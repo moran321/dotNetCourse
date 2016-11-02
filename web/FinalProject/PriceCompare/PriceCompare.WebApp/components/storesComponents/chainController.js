@@ -31,8 +31,3 @@ var Chain = (function () {
     }
     return Chain;
 }());
-app.component("maStores", {
-    templateUrl: "components/storesComponents/stores.html",
-    controller: ChainsCtrl
-});
-//# sourceMappingURL=chainController.js.map

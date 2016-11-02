@@ -1,22 +1,29 @@
-﻿@theme-color: #f0f3f4;
+﻿@import "../theme";
 
-.store-div {
-    background-color: @theme-color;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+.upper-div {
+   
+    background-image: url(@background-img);
+    background-size: cover;
+    font-family: @font-family;
+
+    .black-tint {
+         min-height: 150px;
+        width: 100%;
+        background-color: rgba(0,0,0,0.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
     .center-div {
-        width: 80%;
+        color: white;
         margin: 20px;
         text-align: right;
         line-height: 30px;
 
-        .header-style {
-            font-size: 24px;
-        }
-
         .stores-list-div {
+            color: black;
             padding: 20px;
             background-color: white;
             line-height: normal;
@@ -29,25 +36,32 @@
             .list {
                 padding: 10px;
             }
+
+            .xSymbol {
+                color: red;
+                cursor: pointer;
+            }
         }
     }
 
-    .button {
-        margin-right: 18%;
+    .addStore {
+        margin-right: 180px;
+        margin-top: 10px;
         border: none;
-        color: black;
-        background-color: white;
-        //padding: 15px 32px;
+        color: @button-color;
         text-align: center;
         text-decoration: none;
         display: inline-block;
-        font-size: 16px;
-        border-bottom: solid black;
+        font-size: 18px;
+        border-bottom: solid @button-color;
+        cursor: pointer;
     }
 
     .button:hover {
         color: gray;
         text-decoration-line: underline;
+        cursor: pointer;
+        border-bottom: solid gray;
     }
 
 
@@ -70,8 +84,10 @@
     .select {
         display: inline-block;
         width: 35%;
+        height: 45px;
         // padding-left: 30px;
         margin: 10px;
-        height: 35px;
+        font-size: 20px;
+        color: black;
     }
 }

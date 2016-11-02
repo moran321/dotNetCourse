@@ -1,0 +1,131 @@
+﻿@import "../theme";
+
+.results {
+    .upper-div{
+        max-height: 150px;
+    }
+    .body-div {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+    }
+
+    .best-cart {
+        padding-top: -40px;
+        padding-bottom: 20px;
+    }
+
+    .best-title {
+        background-color: @best-price-color;
+        color: white;
+        font-size: 18px;
+        width: 331px;
+        z-index: 1;
+        position: absolute;
+        height: 40px;
+        text-align: center;
+        top: -30px;
+        left: -12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .cart-result {
+        position: relative;
+        width: 310px;
+        margin: 70px 10px 50px 10px;
+        align-content: center;
+        border: 3px @theme-color solid;
+        font-family: @font-family;
+        padding-bottom: 80px;
+
+        .where-div {
+            margin: 25px;
+            padding-bottom: 10px;
+
+            .where {
+                padding: 10px;
+                margin: 5px;
+                border: 1px solid @theme-color;
+                text-align: center;
+            }
+        }
+
+        .total-price {
+            text-align: center;
+            color: white;
+            font-family: @font-family;
+            font-size: 30px;
+            height: 70px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+
+        .regular {
+            background-color: @total-price-color;
+        }
+
+
+        .best-cart-price {
+            background-color: @best-price-color;
+        }
+
+        .triangle-right {
+            width: 0;
+            height: 0;
+            position: relative;
+            top: 10px;
+            left: 307px;
+            border-style: solid;
+            border-width: 10px 10px 0 0;
+            border-color: #4f8c28 transparent transparent transparent;
+        }
+
+        .triangle-left {
+            width: 0;
+            height: 0;
+            position: relative;
+            right: 11px;
+            border-style: solid;
+            border-width: 0 10px 10px 0;
+            border-color: transparent #4f8c28 transparent transparent;
+        }
+
+        .items-list {
+            height: 50px;
+            border-bottom: solid 1px @theme-color;
+            margin: 5px 30px;
+
+            .item-name {
+                text-align: right;
+                display: inline-block;
+                width: 70%;
+                margin: 2px;
+            }
+
+            .item-price {
+                text-align: left;
+                display: inline-block;
+                margin: 10px;
+            }
+
+            .best-price {
+                color: forestgreen;
+                font-weight: bold;
+            }
+
+            .worst-price {
+                color: red;
+                font-weight: bold;
+            }
+
+            .regular-price {
+                color: black;
+            }
+        }
+    }
+}

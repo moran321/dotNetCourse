@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PriceCompare.WebAPI.Models
+namespace PriceCompare.WebApi.Models
 {
     // Models returned by AccountController actions.
 

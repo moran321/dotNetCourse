@@ -1,1 +1,1 @@
-{"version":3,"file":"store-picker.js","sourceRoot":"","sources":["store-picker.ts"],"names":[],"mappings":"AACA,GAAG,CAAC,SAAS,CAAC,eAAe,EAAE;IAC3B,WAAW,EAAE,+CAA+C;IAC5D,QAAQ,EAAE;QACN,MAAM,EAAE,GAAG;KACd;IACD,UAAU,EAAE,UAAU;CACzB,CAAC,CAAC"}
+{"version":3,"file":"store-picker.js","sourceRoot":"","sources":["store-picker.ts"],"names":[],"mappings":"AACA;IAEI,yBAAoB,WAAwB;QAAxB,gBAAW,GAAX,WAAW,CAAa;IAE5C,CAAC;IACL,sBAAC;AAAD,CAAC,AALD,IAKC"}

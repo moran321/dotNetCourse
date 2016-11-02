@@ -1,0 +1,32 @@
+﻿
+
+<div ng-class="$ctrl.isCheapest() ? 'best-cart' : 'regular'" class="cart-result">
+
+    <div class="best-title" ng-show="$ctrl.isCheapest()">
+       <span>
+           הזול ביותר
+        </span>
+    </div>
+    <div class="triangle-right" ng-show="$ctrl.isCheapest()"></div>
+    <div class="triangle-left" ng-show="$ctrl.isCheapest()"></div>
+
+    <div class="where-div">
+        <div class="chain where">
+            <span> {{$ctrl.cart.chainName}}</span>
+        </div>
+        <div class="store where">
+            <span> {{$ctrl.cart.store}}</span>
+        </div>
+    </div>
+
+    <div ng-class="$ctrl.isCheapest() ? 'best-cart-price' : 'regular'" class="total-price">
+        <p><b>{{$ctrl.cart.cartPrice}}</b></p>
+
+    </div>
+
+    <div dir="rtl" class="items-list" ng-repeat="item in $ctrl.getItems()">
+        <div class="item-name"><b>{{item.item.name}}</b></div>
+        <div class="item-price" ng-class="$ctrl.getPriceClass(item)">{{item.price}}</div>
+    </div>
+
+</div>

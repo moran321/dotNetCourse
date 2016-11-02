@@ -1,0 +1,24 @@
+﻿
+<div class="item-entry-div row ">
+
+    <div class="add-btn-div btn col-md-3 text-center">
+        <button class="button-theme" ng-click="$ctrl.onClick()">{{$ctrl.buttonText}}</button>
+    </div>
+
+    <div class="quantity-div col-md-3">
+        <input class="quantity" type="number" min="1" max="1000" step="1" value="1" ng-model="$ctrl.item.quantity" />
+    </div>
+
+    <div class="img-div col-md-6 text-right">
+        <div class="package">
+            {{$ctrl.item.item.packageQuant}}
+        </div>
+        <span class="item-descrip-div text-right">
+            {{$ctrl.item.item.name}}
+        </span>
+        <!--<img src="https://www.iaap-hq.org/global_graphics/default-store-350x350.jpg" />-->
+        <img class="img" ng-src="{{$ctrl.item.item.pic}}" />
+
+    </div>
+
+</div>

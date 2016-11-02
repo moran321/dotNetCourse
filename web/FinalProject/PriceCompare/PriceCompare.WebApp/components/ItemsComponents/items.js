@@ -1,20 +1,23 @@
-var Item = (function () {
-    function Item(name, price, description) {
-        this.Name = name;
-        this.Price = price;
-        this.Description = description;
-        this.Pic = "https://www.iaap-hq.org/global_graphics/default-store-350x350.jpg";
-    }
-    return Item;
-}());
 var ItemsCtrl = (function () {
     function ItemsCtrl(cartService) {
         this.cartService = cartService;
     }
+    ItemsCtrl.prototype.isCartEmpty = function () {
+        if (this.cartService.cart.itemsInCart.length == 0) {
+            return true;
+        }
+        return false;
+    };
+    ItemsCtrl.prototype.getCart = function () {
+        return this.cartService.cart;
+    };
+    ItemsCtrl.prototype.addItem = function (item) {
+        this.cartService.cart.addItem(item);
+        this.selectedText = '';
+    };
+    ItemsCtrl.prototype.removeItem = function (item) {
+        this.cartService.cart.removeItem(item);
+    };
     return ItemsCtrl;
 }());
-app.component("maItems", {
-    templateUrl: "components/itemsComponents/items.html",
-    controller: ItemsCtrl
-});
 //# sourceMappingURL=items.js.map

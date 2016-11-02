@@ -115,6 +115,22 @@ namespace PriceCompare.ViewModel
     }
     /*---------------------------------*/
 
+        public List<ViewItem> GetItemsInStore( string chainName, string storeName)
+        {
+            var items = _dataGetter.GetItemsInStore(chainName,storeName);
+            var list = from it in items
+                       select new ViewItem
+                       {
+                           ItemName = it.Name,
+                           ItemCode = it.ItemCode.ToString()
+                           
+                       };
+            return list.ToList();
+        }
+        /*---------------------------------*/
+
+
+
         public List<ViewItem> GetItemsInStore()
         {
             var items = _dataGetter.GetItemsInStore(Cart.ChainName, Cart.StoreName);

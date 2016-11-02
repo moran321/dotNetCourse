@@ -1,4 +1,79 @@
-﻿const app = angular.module("myApp", ["ui.bootstrap"]);
+﻿const app = angular
+    .module("myApp", ["ui.bootstrap", "ngRoute"])
+    .component("maHeader", {
+        templateUrl: "components/headerComponents/header.html",
+        controller: HeaderCtrl
+    })
+    .component("maStores", {
+        templateUrl: "components/storesComponents/stores.html",
+        controller: StoresCtrl
+    })
+    .component("maStorePicker", {
+        templateUrl: "components/storesComponents/storePicker/store-picker.html",
+        bindings: {
+            number: "<",
+            
+        },
+        controller: StorePickerCtrl
+    })
+    .component("maItems", {
+        templateUrl: "components/itemsComponents/items.html",
+        controller: ItemsCtrl
+    })
+    .component("maItemEntry", {
+        templateUrl: "components/itemsComponents/itemsEntry/item-entry.html",
+        bindings: {
+            item: "=",
+            buttonText: "@",
+            onButtonClick: "&"
+        },
+        controller: ItemEntryCtrl
+    })
+
+    .component("maResults", {
+        templateUrl: "components/resultsComponent/results.html",
+        controller: ResultsCtrl
+    })
+    .component("maStoreResults", {
+        templateUrl: "components/resultsComponent/storeResults.html",
+        bindings: {
+            cart: "="
+        },
+        controller: StoreResultsCtrl
+    })
+
+    //.service("cartService", CartService)
+    .service("storesService", StoresService)
+    .service("userSelectionService", UserSelectionService)
+    .service("resultsService", ResultsService)
+    .service("dataService", DataService)
+
+    .config(function ($routeProvider) {
+        $routeProvider
+            .when("/", {
+                templateUrl: "home.html"
+            })
+            .when("/results", {
+                templateUrl: "resultsPage.html"
+            })
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //app.controller('chainController', function ($scope, $http) {

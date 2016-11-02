@@ -1,10 +1,10 @@
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using PriceCompare.WebAPI.Areas.HelpPage.ModelDescriptions;
-using PriceCompare.WebAPI.Areas.HelpPage.Models;
+using PriceCompare.WebApi.Areas.HelpPage.ModelDescriptions;
+using PriceCompare.WebApi.Areas.HelpPage.Models;
 
-namespace PriceCompare.WebAPI.Areas.HelpPage.Controllers
+namespace PriceCompare.WebApi.Areas.HelpPage.Controllers
 {
     /// <summary>
     /// The controller that will handle requests for the help page.

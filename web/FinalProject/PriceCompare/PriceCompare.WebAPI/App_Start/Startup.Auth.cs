@@ -8,10 +8,10 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using PriceCompare.WebAPI.Providers;
-using PriceCompare.WebAPI.Models;
+using PriceCompare.WebApi.Providers;
+using PriceCompare.WebApi.Models;
 
-namespace PriceCompare.WebAPI
+namespace PriceCompare.WebApi
 {
     public partial class Startup
     {

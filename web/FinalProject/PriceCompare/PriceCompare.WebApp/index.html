@@ -12,49 +12,40 @@
 
 
     <ma-header></ma-header>
-    <ma-stores></ma-stores>
-    <ma-items></ma-items>
+    <ng-view>
+    </ng-view>
 
-    <!--<table ng-app="app" cellpadding="2" border="1" ng-controller="chainsCtrl as $ctrl">
-        <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>ChainNumber</th>
-            <th>Option</th>
-        </tr>
-        <tr ng-repeat="chain in $ctrl.chains">
-            <td>{{chain.Id}}</td>
-            <td>{{chain.Name}}</td>
-            <td>{{chain.ChainNumber}}</td>
-            <td>Delete | Edit</td>
-        </tr>
-    </table>-->
-    <!--scripts-->
+    <!-- scripts -->
 
     <script src="bower_components/angular/angular.min.js"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>    
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
 
-    <!--<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
-
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-
-
-    <script src="app.js"></script>
-
-    <script src="components/storesComponents/chainController.js"></script>
-    <script src="components/cartController.js"></script>
-    <script src="components/headerComponents/header.js"></script>
-    <script src="components/storesComponents/stores.js"></script>
-    <script src="components/storesComponents/store-picker.js"></script>
-    <script src="components/ItemsComponents/items.js"></script>
-    <script src="components/ItemsComponents/item-entry.js"></script>
-
+    <script src="components/classes/dataService.js"></script>
+    <script src="components/storeService.js"></script>
+    <script src="components/selectedItems.js"></script>
+    <script src="components/cartService.js"></script>
+    <script src="components/storesComponents/storesCtrl.js"></script>
+    <script src="components/storesComponents/storePicker/store-picker.js"></script>
+    <script src="components/ItemsComponents/itemsCtrl.js"></script>
+    <script src="components/ItemsComponents/itemsEntry/item-entry.js"></script>
+    <script src="components/headerComponents/headerCtrl.js"></script>
+    <script src="components/classes/chains.js"></script>
+    <script src="components/classes/item.js"></script>
+    <script src="components/classes/store.js"></script>
+    <script src="components/classes/viewCart.js"></script>
+    <script src="components/classes/price.js"></script>
+    <script src="components/classes/selectedItems.js"></script>
+    <script src="components/classes/userSelectionService.js"></script>
+    <script src="components/classes/viewItem.js"></script>
+    <script src="components/resultsComponent/resultsCtrl.js"></script>
+    <script src="components/resultsComponent/resultsService.js"></script>
+    <script src="components/resultsComponent/storeResultsCtrl.js"></script>
 
     <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
     <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
-
+    <script src="app.js"></script>
 </body>
 </html>

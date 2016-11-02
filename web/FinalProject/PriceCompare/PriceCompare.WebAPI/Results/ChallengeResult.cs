@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 
-namespace PriceCompare.WebAPI.Results
+namespace PriceCompare.WebApi.Results
 {
     public class ChallengeResult : IHttpActionResult
     {

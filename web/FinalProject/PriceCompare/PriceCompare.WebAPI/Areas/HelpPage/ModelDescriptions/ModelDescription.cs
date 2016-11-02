@@ -1,6 +1,6 @@
 using System;
 
-namespace PriceCompare.WebAPI.Areas.HelpPage.ModelDescriptions
+namespace PriceCompare.WebApi.Areas.HelpPage.ModelDescriptions
 {
     /// <summary>
     /// Describes a type model.

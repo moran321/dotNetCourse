@@ -3,7 +3,7 @@ using System.Text;
 using System.Web;
 using System.Web.Http.Description;
 
-namespace PriceCompare.WebAPI.Areas.HelpPage
+namespace PriceCompare.WebApi.Areas.HelpPage
 {
     public static class ApiDescriptionExtensions
     {

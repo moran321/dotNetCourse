@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace PriceCompare.WebAPI
+namespace PriceCompare.WebApi
 {
     public class BundleConfig
     {

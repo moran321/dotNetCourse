@@ -1,13 +1,13 @@
-﻿using Microsoft.Owin.Security.OAuth;
-using Newtonsoft.Json.Serialization;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Web.Http;
+using Microsoft.Owin.Security.OAuth;
+using Newtonsoft.Json.Serialization;
+using System.Net.Http.Headers;
 
-namespace PriceCompare.WebAPI
+namespace PriceCompare.WebApi
 {
     public static class WebApiConfig
     {
@@ -26,7 +26,6 @@ namespace PriceCompare.WebAPI
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
-
 
             //****//
             config.Formatters.Remove(config.Formatters.XmlFormatter);

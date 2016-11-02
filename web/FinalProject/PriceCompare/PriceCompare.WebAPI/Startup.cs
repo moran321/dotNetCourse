@@ -4,9 +4,9 @@ using System.Linq;
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(PriceCompare.WebAPI.Startup))]
+[assembly: OwinStartup(typeof(PriceCompare.WebApi.Startup))]
 
-namespace PriceCompare.WebAPI
+namespace PriceCompare.WebApi
 {
     public partial class Startup
     {

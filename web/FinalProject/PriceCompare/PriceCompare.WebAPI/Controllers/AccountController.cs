@@ -13,11 +13,11 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using PriceCompare.WebAPI.Models;
-using PriceCompare.WebAPI.Providers;
-using PriceCompare.WebAPI.Results;
+using PriceCompare.WebApi.Models;
+using PriceCompare.WebApi.Providers;
+using PriceCompare.WebApi.Results;
 
-namespace PriceCompare.WebAPI.Controllers
+namespace PriceCompare.WebApi.Controllers
 {
     [Authorize]
     [RoutePrefix("api/Account")]

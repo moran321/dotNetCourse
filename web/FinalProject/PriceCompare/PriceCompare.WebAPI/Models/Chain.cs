@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PriceCompare.WebAPI.Models
+namespace PriceCompare.WebApi.Models
 {
     using System;
     using System.Collections.Generic;

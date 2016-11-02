@@ -1,4 +1,4 @@
-namespace PriceCompare.WebAPI.Areas.HelpPage
+namespace PriceCompare.WebApi.Areas.HelpPage
 {
     /// <summary>
     /// Indicates whether the sample is used for request or response

@@ -9,4 +9,3 @@ var secondLevels = document.querySelectorAll('[role="second-level"]');
 addClass(secondLevels, 'red');
 var _3thLevels = document.querySelectorAll('[role="_3th-level"]');
 addClass(_3thLevels, 'lime');
-//# sourceMappingURL=flex-script.js.map

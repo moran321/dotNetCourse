@@ -1,0 +1,24 @@
+﻿<!-- StorePickerCtrl -->
+<div dir="rtl" class="container-fluid">
+    
+    <div class="text">
+        <span>בחר חנות {{$ctrl.number}} </span>
+    </div>
+    <select class="select form-control" 
+            ng-options="chain as chain.name for chain in $ctrl.getChains() track by chain.name" 
+            ng-model="$ctrl.selectedChain" >
+        <option value="" disabled>בחר רשת</option>
+    </select>
+
+    <select class="select form-control" 
+            ng-options="store as store.address for store in $ctrl.selectedChain.stores" 
+            ng-model="$ctrl.selectedStore"
+            ng-change="$ctrl.onStoreChanged($ctrl.number)">
+        <option value="" disabled>בחר חנות</option>
+    </select>
+
+    <span ng-click="$ctrl.remove($ctrl.number)" 
+          ng-show="$ctrl.isLast($ctrl.number)" 
+          class="glyphicon glyphicon-remove xSymbol" 
+          aria-hidden="true"></span>
+</div>

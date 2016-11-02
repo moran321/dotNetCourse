@@ -1,15 +1,19 @@
-﻿<div class="store-div">
-    <div class="center-div">
-        <span class="header-style"><b>אתר השוואת המחירים המוביל בישראל</b></span>
-        <div class="stores-list-div">
+﻿<div class="upper-div">
+    <div class="black-tint">
+        <div class="center-div centering">
+            <span class="header-style"><b>אתר השוואת המחירים המוביל בישראל</b></span>
+            <div class="stores-list-div">
 
-            <div ng-repeat="n in $ctrl.numOfStoresToCompare track by $index">
-                <ma-store-picker number="n"></ma-store-picker>
+                <div ng-repeat="n in $ctrl.storesService.numOfStoresToCompare track by $index">
+                    <ma-store-picker number="n"></ma-store-picker>
+                </div>
+
+                <a class="addStore" ng-click="$ctrl.addStore()">הוסף חנות להשוואה</a>
             </div>
-
-            <a class="button" ng-click="$ctrl.addStore()">הוסף חנות להשוואה</a>
         </div>
+
     </div>
+   
 </div>
 
 

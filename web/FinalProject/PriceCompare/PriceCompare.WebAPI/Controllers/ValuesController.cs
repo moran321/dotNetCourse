@@ -5,7 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 
-namespace PriceCompare.WebAPI.Controllers
+namespace PriceCompare.WebApi.Controllers
 {
     [Authorize]
     public class ValuesController : ApiController

@@ -1,4 +1,4 @@
-namespace PriceCompare.WebAPI.Areas.HelpPage.ModelDescriptions
+namespace PriceCompare.WebApi.Areas.HelpPage.ModelDescriptions
 {
     public class EnumValueDescription
     {
