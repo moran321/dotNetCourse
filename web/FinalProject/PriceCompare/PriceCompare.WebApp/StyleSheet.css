@@ -11,6 +11,11 @@
   border-radius: 6px;
   padding: 5px 3px 5px 3px;
 }
+.button-theme:hover {
+  color: black;
+  box-shadow: 0 1px 1px 0 #394244;
+  background-color: #0da6d2;
+}
 .header-style {
   font-style: "Open Sans Hebrew";
   font-size: 34px;
@@ -50,9 +55,9 @@
   font-family: "Open Sans Hebrew";
 }
 .upper-div .black-tint {
-  min-height: 150px;
+  min-height: 200px;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -187,7 +192,7 @@
   display: inline-block;
 }
 .results .upper-div {
-  max-height: 150px;
+  max-height: 200px;
 }
 .results .body-div {
   display: flex;

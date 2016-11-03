@@ -1,11 +1,15 @@
 ﻿class DataService {
-    private chains: ChainDTO[];
+    private chains: ng.IPromise<ChainDTO[]>;
 
     constructor(private $http: ng.IHttpService, private userSelectionService: UserSelectionService) {
-        this.chains = [];
+        this.chains  = this.getChainsFromServer();
     }
 
     public getChains(): ng.IPromise<ChainDTO[]> {
+        return this.chains;
+    }
+
+    public getChainsFromServer(): ng.IPromise<ChainDTO[]> {
         return this.$http.get("http://localhost:7407/api/chains")
             .then((response) => {
                 console.log(response.data);

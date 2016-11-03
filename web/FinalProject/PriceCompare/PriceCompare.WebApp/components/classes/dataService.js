@@ -2,9 +2,12 @@ var DataService = (function () {
     function DataService($http, userSelectionService) {
         this.$http = $http;
         this.userSelectionService = userSelectionService;
-        this.chains = [];
+        this.chains = this.getChainsFromServer();
     }
     DataService.prototype.getChains = function () {
+        return this.chains;
+    };
+    DataService.prototype.getChainsFromServer = function () {
         return this.$http.get("http://localhost:7407/api/chains")
             .then(function (response) {
             console.log(response.data);
