@@ -1,0 +1,55 @@
+﻿<Window x:Class="RSSfeeds.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RSSfeeds"
+        mc:Ignorable="d"
+        Title="RSS" Height="350" Width="525">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="80"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border Margin="2" Padding="5" Grid.Column="0" BorderThickness="1" BorderBrush="Gray">
+            <StackPanel x:Name="listGrid">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="Src/star-icon.jpg" Width="10" Height="10" Margin="0,0,2,0"/>
+                    <TextBlock Text="Favorites"/>
+                </StackPanel>
+                
+                <TreeView Name="Feeds">
+                    <TreeViewItem>
+                        <TreeViewItem.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Feeds"/>
+                                <TextBlock Text="+" />
+                            </StackPanel>
+                        </TreeViewItem.Header>
+                    </TreeViewItem>
+                </TreeView>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Column="1" Margin="2" Padding="5" BorderThickness="1" BorderBrush="Gray">
+            <Grid x:Name="contentGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <TextBlock Text="Header"/>
+                    <TextBox Width="100" Height="auto"></TextBox>
+                </Grid>
+                <FlowDocumentReader Grid.Row="1">
+                    <FlowDocument>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="http://www.google.ch">Google</Hyperlink>
+                        </Paragraph>
+                    </FlowDocument>
+                </FlowDocumentReader>
+            </Grid>
+          
+        </Border>
+    </Grid>
+</Window>
